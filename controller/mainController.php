@@ -23,14 +23,14 @@
                     $_SESSION['connected'] = 'admin';
                     echo 'admin is connected';
                     print_r($teacher);
-                    // header('Location: ?admin');
+                    header('Location: ?admin');
                 }
                 //user
                 else{
                     $_SESSION['connected'] = 'user';
                     echo 'user is connected';
                     print_r($teacher);
-                    // header('Location: ?coffee');
+                    header('Location: ?coffee');
                 }
             }
             //connexion ratée : Retour a la page de connexion
@@ -47,11 +47,30 @@
 
     //ajout / voir consommation de café
     elseif (isset($_GET["coffee"])){
+        //page ajout consommation de café
         if($_GET['coffee']=='add'){
-            //ajouter une consommation de café
+            $conn = new MainModel();
+            //tableau de tous les lieux
+            $locations = $conn->getAllLocations(); 
+            //tableau de toutes les machines de chaque lieu
+            foreach ($locations as $location) {
+                $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']);
+            }
+            // print_r($machines);
+            // echo '<br>';die();
+            // print_r($locations[0]['locMachines']) ;
+            // echo '<br>';
+            
+            include('view/addCoffeeConso.php');
+        }
+        elseif($_GET['coffee']=='addOrder'){
+            print_r($_POST);
         }
         elseif($_GET['coffee']=='view'){
             //voir bilan du café consommé
+        }
+        else{
+            header('location: ?coffee=add');
         }
 
     }

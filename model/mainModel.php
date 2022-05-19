@@ -150,6 +150,38 @@ class MainModel
         return $result;
     }
 
+    // public function getAllLocationsMachines()
+    // {
+        
+    // }
+    /**
+     * get all locations in t_location
+     *
+     * @return array
+     */
+    public function getAllLocations()
+    {
+        $query="SELECT idLocation, locName FROM t_location ";
+        $result = $this->querySimpleExecute($query);
+        return $result;
+    }
+
+    public function getAllMachinesFromLocation($idLocation)
+    {
+        $query="SELECT `idMachine`,`macName`, t_typemachine.typName as macType, t_typemachine.typCoffeePrice as macCoffeePrice FROM `t_machine`
+        INNER JOIN t_typemachine on t_machine.fkTypeMachine = t_typemachine.idTypeMachine
+        WHERE `fkLocation` LIKE :idLocation";
+        $binds=array(
+            0=>array(
+                'var'=> $idLocation,
+                'marker'=>':idLocation',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result= $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
+
     
 }
 
