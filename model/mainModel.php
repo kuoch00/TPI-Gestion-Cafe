@@ -85,25 +85,72 @@ class MainModel
         $req->closeCursor();
     }
 
-    public function checkConnexion($username, $password)
+    /**
+     * check de la connexion, retourne rien si l'un des deux paramètres est faux
+     *
+     * @param [string] $username
+     * @param [string] $password
+     * @return array
+     */
+    public function checkConnexion($inputUsername, $inputPassword)
     {
-        $query = "";
+        $teaPassword = $this->getPassword($inputUsername); 
+        if($teaPassword){
+            if(password_verify($inputPassword,$teaPassword[0]['teaPassword'])){
+                $result = $this->getTeacher($teaPassword[0]['idTeacher']);
+                return $result;
+            }
+            else{ 
+                return false;
+            } 
+        }
+        else{
+            return false;
+        }
+    }
+
+    /**
+     * Recherche le mot de passe et l'id correspondant au nom d'utilisateur
+     * Retourne vide si l'utilisateur n'existe pas
+     *
+     * @param [string] $username
+     * @return array
+     */
+    private function getPassword($username)
+    {
+        $query = "SELECT idTeacher, teaPassword FROM `t_teacher` WHERE `teaUsername` LIKE :username ";
         $binds = array(
             0=>array(
                 'var' => $username,
                 'marker'=> ':username',
                 'type'=> PDO::PARAM_STR
-            ),
-            1=>array(
-                'var' => $password,
-                'marker'=> ':password',
-                'type'=> PDO::PARAM_STR
             )
-        )
+        );
         $result = $this->queryPrepareExecute($query, $binds);
         return $result;
     }
 
+    /**
+     * recherche les données de l'utilisateur/enseignant
+     *
+     * @param [string] $id
+     * @return array
+     */
+    private function getTeacher($id)
+    {
+        $query = "SELECT idTeacher, teaFirstname, teaLastname, teaIsAdmin, teaNbWeek FROM t_teacher WHERE idTeacher like :id";
+        $binds = array(
+            0=>array(
+                'var' => $id,
+                'marker'=> ':id',
+                'type'=> PDO::PARAM_STR
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
+
+    
 }
 
 

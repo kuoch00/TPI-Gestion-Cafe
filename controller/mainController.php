@@ -12,12 +12,37 @@
     
     //login
     if(isset($_GET['login'])){
+        //tentative de connexion
         if(($_GET['login'])=='connect'){
-            $connect = new MainModel();
-            //check info de connection
-            // $_POST['username'] ['password]
+            $conn = new MainModel();
+            $teacher = $conn->checkConnexion($_POST['username'], $_POST['password']);
+            //connexion réussie
+            if($teacher){
+                //Admin
+                if($teacher[0]['teaIsAdmin']){
+                    $_SESSION['connected'] = 'admin';
+                    echo 'admin is connected';
+                    print_r($teacher);
+                    // header('Location: ?admin');
+                }
+                //user
+                else{
+                    $_SESSION['connected'] = 'user';
+                    echo 'user is connected';
+                    print_r($teacher);
+                    // header('Location: ?coffee');
+                }
+            }
+            //connexion ratée : Retour a la page de connexion
+            else{
+                header('Location: ?login');
+            }
         }
-        include ("view/login.html");
+        //page de connexion
+        else{
+            include ("view/login.html");
+        }
+        
     }
 
     //ajout / voir consommation de café
@@ -33,6 +58,11 @@
 
     //espace administrateur
     elseif (isset($_GET["admin"])){
+        $page = $_GET['admin'];
+        if($page == 'home'){
+
+        }
+        
         
         
     }
