@@ -56,14 +56,9 @@
             foreach ($locations as $location) {
                 $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']);
             }
-            // print_r($machines);
-            // echo '<br>';die();
-            // print_r($locations[0]['locMachines']) ;
-            // echo '<br>';
-            
             include('view/addCoffeeConso.php');
         }
-        elseif($_GET['coffee']=='addOrder'){
+        elseif($_GET['coffee']=='addConso'){
             print_r($_POST);
         }
         elseif($_GET['coffee']=='view'){

@@ -1,8 +1,11 @@
-<!-- nav -->
-    <!-- prenom nom +  bouton déconnexion -->
-
+<!-- ajouter un nav avec prenom nom +  bouton déconnexion --> 
+<!-- 
+    auteur : Elisa Kuoch
+    date : 19.05.2022
+    description : formulaire d'ajout de la consommation de café
+ -->
 <div>
-    <form action="?coffee=addOrder" method="POST">
+    <form action="?coffee=addConso" method="POST">
         <?php
             foreach ($locations as $location) {
                 ?>
@@ -32,7 +35,7 @@
                     </tbody>  
                 </table>
                 <?php
-            }//fin foreach $location
+            }//fin foreach $locations
         ?>
         <button type="submit">Valider</button>
     </form>

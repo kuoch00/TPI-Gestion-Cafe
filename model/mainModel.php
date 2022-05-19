@@ -1,4 +1,7 @@
 <?php
+/**
+ * Model principal
+ */
 class MainModel
 {
     /**
@@ -150,10 +153,7 @@ class MainModel
         return $result;
     }
 
-    // public function getAllLocationsMachines()
-    // {
-        
-    // }
+    
     /**
      * get all locations in t_location
      *
@@ -166,6 +166,12 @@ class MainModel
         return $result;
     }
 
+    /**
+     * get all machines from a location
+     *
+     * @param [string] $idLocation
+     * @return array
+     */
     public function getAllMachinesFromLocation($idLocation)
     {
         $query="SELECT `idMachine`,`macName`, t_typemachine.typName as macType, t_typemachine.typCoffeePrice as macCoffeePrice FROM `t_machine`
