@@ -251,8 +251,7 @@ class MainModel
      * @return void
      */
     private function addOrder($total, $id)
-    {
-        
+    { 
         $query = "INSERT INTO t_order SET ordDate=:ordDate, ordTotal=:ordTotal, fkTeacher=:idTeacher";
         $binds=array(
             0=>array(
@@ -284,12 +283,10 @@ class MainModel
     private function addAllInclude($conso)
     {
         //récupère derniere commande effectuée (celle que l'on vient d'ajouter dans addOrder)
-        $query ="SELECT MAX(`idOrder`) as idOrder FROM `t_order`"; 
-        $idOrder = $this->querySimpleExecute($query); 
+        $idOrder = $this->getLastOrder($_SESSION['user'][0]['idTeacher']); 
 
         //recup liste machines
-        $listMachines = $this->getMachineCoffeePrices();
-
+        $listMachines = $this->getMachineCoffeePrices(); 
 
         foreach ($conso as $idMachine => $nbCafe) {  
             if($nbCafe!="" && $nbCafe!=0){
@@ -302,6 +299,26 @@ class MainModel
                 } 
             }
         }
+    }
+
+    /**
+     * Récupère l'id de la derniere commande de l'utilisateur
+     *
+     * @param [int] $idTeacher
+     * @return array
+     */
+    private function getLastOrder($idTeacher)
+    {
+        $query ="SELECT MAX(`idOrder`) as idOrder FROM `t_order` WHERE fkTeacher=:idTeacher"; 
+        $binds=array(
+            0=>array(
+                'var'=>$idTeacher,
+                'marker'=>':idTeacher',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds); 
+        return $result;
     }
 
     /**
