@@ -2,8 +2,17 @@
     auteur : Elisa Kuoch
     date : 20.05.2022
     description : page où l'utilisateur va pouvoir voir le bilan de sa commande 
- -->
-<!-- si admin : bouton retour vers admin home -->
+ --> 
+<?php
+ if(!$_SESSION['connected']){
+    header('Location: ?login');
+ }
+ else{
+     if($_SESSION['connected']=='admin'){?>
+         <a href="?admin=home" role="button">Retour</a><?php
+     }
+ }
+ ?>
 <h3>Bilan de la consommation de café 2022 - 2022</h3>
 <div><?php
     foreach($locations as $location){ ?> 

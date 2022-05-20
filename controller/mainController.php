@@ -8,6 +8,7 @@
 
     //mvc
     include_once('model/mainModel.php');
+    include_once('model/adminModel.php');
     include('view/view.php');
     
     //login
@@ -70,9 +71,9 @@
 
     //formulaire / ajout / voir consommation de café
     elseif (isset($_GET['coffee'])){
-        switch($_GET['coffee']){
-            case 'add' :
-                $conn = new MainModel();
+        $conn = new MainModel();
+        switch($_GET['coffee']){ 
+            case 'add' : 
                 //tableau de tous les lieux
                 $locations = $conn->getAllLocations(); 
                 //tableau de toutes les machines de chaque lieu
@@ -81,15 +82,13 @@
                 }
                 include('view/addCoffeeConso.php');
                 break;
-            case 'addConso' :
-                $conn = new MainModel();
+            case 'addConso' : 
                 //ajout de la consommation de café dans la base de données
                 $addConso = $conn->addConso($_POST);
                 
                 header('Location: ?coffee=view');
                 break;
-            case 'view' :
-                $conn = new MainModel(); 
+            case 'view' : 
                 $locations = $conn->getAllLocations();
                 foreach($locations as $location){
                     $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']); 
@@ -111,64 +110,40 @@
                 break;
             default :
                 header('Location: ?coffee=add');
-                break;
-            
+                break; 
         }
-        //page ajout consommation de café
-        // if($_GET['coffee']=='add'){ 
-        //     $conn = new MainModel();
-        //     //tableau de tous les lieux
-        //     $locations = $conn->getAllLocations(); 
-        //     //tableau de toutes les machines de chaque lieu
-        //     foreach ($locations as $location) {
-        //         $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']);
-        //     }
-        //     include('view/addCoffeeConso.php');
-        // }
-        //ajout de la consommation dans la base de données
-        // elseif($_GET['coffee']=='addConso'){
-        //     //print_r($_POST);//affiche les id de chaque machine ainsi que le nombre de cafés consommés par semaine
-        //     $conn = new MainModel();
-        //     //ajout de la consommation de café dans la base de données
-        //     $addConso = $conn->addConso($_POST);
-            
-        //     header('Location: ?coffee=view');
-        // }
-        //voir bilan du café consommé
-        // elseif($_GET['coffee']=='view'){
-            // $conn = new MainModel();
-            
-            // $locations = $conn->getAllLocations();
-            // foreach($locations as $location){
-            //     $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']); 
-            //     //machine['idMachine] == t_include.fkMachine =>
-            // } 
-            // //recupère les données de la dernière commande
-            // $lastOrder = $conn->getLastOrder($_SESSION['user'][0]['idTeacher']);
-
-            // $coffeeQuantity = $conn->getCoffeeQuantity($lastOrder[0]['idOrder']);
-            // $total = $lastOrder[0]['ordTotal'];
-            // // print_r($total);
-            // if($lastOrder[0]['ordTotalPaid']){
-            //     $status= "Payé";
-            // }
-            // else{
-            //     $status = "En attente de paiement";
-            // }
-            // include('view/viewCoffeeConso.php');
-        }
-        // else{
-        //     header('Location: ?coffee=add');
-        // } 
-        // }
+    }
 
     //espace administrateur
-    elseif (isset($_GET["admin"])){
-        $page = $_GET['admin'];
-        if($page == 'home'){
-
-        }
-         
+    elseif (isset($_GET['admin'])){
+        $conn = new AdminModel();
+        switch($_GET['admin']){
+            case 'home':
+                $machines = $conn->getMachines();
+                $teachers = $conn->getTeachers();
+                include('view/admin/home.php');
+                break;
+            case 'addMachineForm' :
+                include('view/admin/addMachine.php');
+                break;
+            case 'addMachine' :
+                //si new type de café
+                    //add new type
+                //si pas nouveau type de café
+                $add = $conn->addMachine($_POST['name'], $_POST['emplacement'], $_POST['type']);
+                break;
+            case 'updateCoffeePriceForm' :
+                break;
+            case 'updateCoffeePrice' :
+                break;
+            case 'updatePaymentForm':
+                break;
+            case 'updatePayment':
+                break;
+            default :
+                header('Location: ?admin=home');
+                break;
+        } 
     }
     else{
         // permet de faire une redirection directement la page home s'il n'y a rien (index)

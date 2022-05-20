@@ -4,6 +4,16 @@
     date : 19.05.2022
     description : formulaire d'ajout de la consommation de café
  -->
+ <?php
+ if(!$_SESSION['connected']){
+    header('Location: ?login');
+ }
+ else{
+     if($_SESSION['connected']=='admin'){?>
+         <a href="?admin=home" role="button">Retour</a><?php
+     }
+ }
+ ?>
  <!-- si admin : bouton retour vers admin home -->
  <h3>Ajout de la consommation de café 2022 - 2022</h3>
 <div>
