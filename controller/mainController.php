@@ -12,43 +12,70 @@
     
     //login
     if(isset($_GET['login'])){
-        //tentative de connexion
-        if(($_GET['login'])=='connect'){
-            $conn = new MainModel();
-            $teacher = $conn->checkConnexion($_POST['username'], $_POST['password']);
-            //connexion réussie
-            if($teacher){
-                //Admin
-                if($teacher[0]['teaIsAdmin']){
-                    $_SESSION['connected'] = 'admin';
-                    echo 'admin is connected';
-                    print_r($teacher);
-                    header('Location: ?admin');
-                }
-                //user
-                else{
-                    $_SESSION['connected'] = 'user';
-                    echo 'user is connected';
-                    print_r($teacher);
-                    header('Location: ?coffee');
-                }
-            }
-            //connexion ratée : Retour a la page de connexion
-            else{
-                header('Location: ?login');
-            }
-        }
-        //page de connexion
-        else{
-            include ("view/login.html");
-        }
+        //temp pour faciliter les tests
+        unset($_SESSION['user']);
+        unset($_SESSION['connected']);
+
         
+        //tentative de connexion
+        if(!isset($_SESSION['connected'])){
+
+        
+            if(($_GET['login'])=='connect'){
+                $conn = new MainModel();
+                $teacher = $conn->checkConnexion($_POST['username'], $_POST['password']);
+                //connexion réussie
+                if($teacher){
+                    $_SESSION['user'] = $teacher;
+                    //Admin
+                    if($teacher[0]['teaIsAdmin']){
+                        $_SESSION['connected'] = 'admin';
+                        echo 'admin is connected';
+                        print_r($teacher);
+                        header('Location: ?admin');
+                    }
+                    //user
+                    else{
+                        $_SESSION['connected'] = 'user'; 
+                        echo 'user is connected';
+                        print_r($teacher);
+                        header('Location: ?coffee');
+                    }
+                    
+                }
+                //connexion ratée : Retour a la page de connexion
+                else{
+                    //message erreur a faire passer??
+                    header('Location: ?login');
+                }
+            }
+            //page de connexion
+            else{
+                include ("view/login.html");
+            }
+        }//fin isset $_SESSION['connected'] 
+        else{
+            //trouver un moyen pour ne pas répéter ce code...
+            if($teacher[0]['teaIsAdmin']){
+                $_SESSION['connected'] = 'admin';
+                echo 'admin is connected';
+                print_r($teacher);
+                header('Location: ?admin');
+            }
+            //user
+            else{
+                $_SESSION['connected'] = 'user'; 
+                echo 'user is connected';
+                print_r($teacher);
+                header('Location: ?coffee');
+            }
+        }
     }
 
-    //ajout / voir consommation de café
+    //formulaire / ajout / voir consommation de café
     elseif (isset($_GET["coffee"])){
         //page ajout consommation de café
-        if($_GET['coffee']=='add'){
+        if($_GET['coffee']=='add'){ 
             $conn = new MainModel();
             //tableau de tous les lieux
             $locations = $conn->getAllLocations(); 
@@ -58,11 +85,17 @@
             }
             include('view/addCoffeeConso.php');
         }
+        //ajout de la consommation dans la base de données
         elseif($_GET['coffee']=='addConso'){
-            print_r($_POST);
+            //print_r($_POST);//affiche les id de chaque machine ainsi que le nombre de cafés consommés par semaine
+            $conn = new MainModel();
+            //ajout de la consommation de café dans la base de données
+            $conn->addConso($_POST);
+            
         }
+        //voir bilan du café consommé
         elseif($_GET['coffee']=='view'){
-            //voir bilan du café consommé
+            
         }
         else{
             header('location: ?coffee=add');

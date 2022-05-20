@@ -155,7 +155,7 @@ class MainModel
 
     
     /**
-     * get all locations in t_location
+     * récupère tous les lieux dans t_location
      *
      * @return array
      */
@@ -167,7 +167,7 @@ class MainModel
     }
 
     /**
-     * get all machines from a location
+     * récupère toutes les machines d'un lieu
      *
      * @param [string] $idLocation
      * @return array
@@ -188,7 +188,160 @@ class MainModel
         return $result;
     }
 
-    
+    /**
+     * ajoute une consommation de café
+     *
+     * @param [array] $conso
+     * @return array
+     */
+    public function addConso($conso)
+    {
+        $total = $this->calcTotal($conso); 
+        $idTeacher = $_SESSION['user'][0]['idTeacher'];
+         
+        $addOrder = $this->addOrder($total, $idTeacher);
+        $addInclude = $this->addAllInclude($conso);
+        
+    }
+
+    /**
+     * calcule le total des cafés de l'année
+     *
+     * @param [array] $conso
+     * @return int
+     */
+    private function calcTotal($conso)
+    {
+        $totalWeek=0;
+        $totalYear=0; 
+        $listMachines = $this->getMachineCoffeePrices();
+
+        foreach ($conso as $idMachine => $nbCafe) { 
+            if($nbCafe!="" && $nbCafe!=0){  
+                foreach ($listMachines as $oneMachine) {
+                    if ($oneMachine['idMachine']==$idMachine) {
+                        $totalWeek += $oneMachine['macCoffeePrice'] * $nbCafe ; 
+                        break;
+                    }
+                }
+            }
+        }
+        $totalYear = $totalWeek * $_SESSION['user'][0]['teaNbWeek']; 
+        return $totalYear; 
+    }
+
+    /**
+     * récupère la liste de toutes les machines à café avec le prix du café
+     *
+     * @return array
+     */
+    private function getMachineCoffeePrices()
+    {
+        $query="SELECT `idMachine`, t_typemachine.typCoffeePrice AS macCoffeePrice FROM `t_machine` 
+        INNER JOIN t_typemachine on t_typemachine.idTypeMachine = t_machine.fkTypeMachine";
+        $result = $this->querySimpleExecute($query);
+        return $result;
+    }
+ 
+    /**
+     * ajoute la commande de la consommation de café dans la base de données
+     *
+     * @param [string] $total
+     * @param [int] $id
+     * @return void
+     */
+    private function addOrder($total, $id)
+    {
+        
+        $query = "INSERT INTO t_order SET ordDate=:ordDate, ordTotal=:ordTotal, fkTeacher=:idTeacher";
+        $binds=array(
+            0=>array(
+                'var'=> date("Y-m-d"),
+                'marker'=>':ordDate',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=>$total,
+                'marker'=>':ordTotal',
+                'type'=>PDO::PARAM_STR
+            ),
+            2=>array(
+                'var'=>$id,
+                'marker'=>':idTeacher',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds); 
+        return $result;
+    }
+
+    /**
+     * ajout de chaque ligne de la commande dans t_include
+     *
+     * @param [array] $conso
+     * @return void
+     */
+    private function addAllInclude($conso)
+    {
+        //récupère derniere commande effectuée (celle que l'on vient d'ajouter dans addOrder)
+        $query ="SELECT MAX(`idOrder`) as idOrder FROM `t_order`"; 
+        $idOrder = $this->querySimpleExecute($query); 
+
+        //recup liste machines
+        $listMachines = $this->getMachineCoffeePrices();
+
+
+        foreach ($conso as $idMachine => $nbCafe) {  
+            if($nbCafe!="" && $nbCafe!=0){
+                foreach($listMachines as $machine){
+                    if($machine['idMachine'] == $idMachine){
+                        // echo $idMachine . " " . $idOrder[0]['idOrder']. " " . $nbCafe. " " . $machine['macCoffeePrice'];
+                        // die();
+                        $add = $this->addInclude($idMachine, $idOrder[0]['idOrder'], $nbCafe, $machine['macCoffeePrice']);
+                    }
+                } 
+            }
+        }
+    }
+
+    /**
+     * insertion dans t_include pour chaque machine
+     *
+     * @param [int] $idMachine
+     * @param [int] $idOrder
+     * @param [int] $coffeeQuantity
+     * @param [string] $coffeePrice
+     * @return void
+     */
+    private function addInclude($idMachine, $idOrder, $coffeeQuantity, $coffeePrice)
+    { 
+        $query="INSERT INTO t_include SET fkMachine=:idMachine, fkOrder=:idOrder, incCoffeeQuantity=:coffeeQuantity, incCoffeePrice=:coffeePrice";
+        $binds=array(
+            0=>array(
+                'var'=>$idMachine,
+                'marker'=>':idMachine',
+                'type'=>PDO::PARAM_STR 
+            ),
+            1=>array(
+                'var'=>$idOrder,
+                'marker'=>':idOrder',
+                'type'=>PDO::PARAM_STR 
+            ),
+            2=>array(
+                'var'=>$coffeeQuantity,
+                'marker'=>':coffeeQuantity',
+                'type'=>PDO::PARAM_STR 
+            ),
+            3=>array(
+                'var'=>$coffeePrice,
+                'marker'=>':coffeePrice',
+                'type'=>PDO::PARAM_STR 
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
+
 }
 
 
