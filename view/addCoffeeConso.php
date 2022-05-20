@@ -4,6 +4,8 @@
     date : 19.05.2022
     description : formulaire d'ajout de la consommation de café
  -->
+ <!-- si admin : bouton retour vers admin home -->
+ <h3>Ajout de la consommation de café 2022 - 2022</h3>
 <div>
     <form action="?coffee=addConso" method="POST">
         <?php

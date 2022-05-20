@@ -65,24 +65,23 @@ class MainModel
         return $dataArray;
     }
 
-
     /**
-    * traiter les données pour les retourner par exemple en tableau associatif 
-    * (avec PDO::FETCH_ASSOC)
-    *
-    *@param PDOStatement $req 
-    */
+     * traiter les données pour les retourner par exemple en tableau associatif (avec PDO::FETCH_ASSOC)
+     *
+     * @param [PDOStatement] $req
+     * @return void
+     */
     private function formatData($req)
     {
         return $req->fetchAll(PDO::FETCH_ASSOC);
     }
-
+ 
     /**
-    * vide le jeu d’enregistrement
-    *
-    *@param $req
-    *@return void
-    */
+     * vide le jeu d’enregistrement
+     *
+     * @param [type] $req
+     * @return void
+     */
     private function unsetData($req)
     {
         $req->closeCursor();
@@ -201,7 +200,7 @@ class MainModel
          
         $addOrder = $this->addOrder($total, $idTeacher);
         $addInclude = $this->addAllInclude($conso);
-        
+        return $addInclude;
     }
 
     /**
@@ -285,20 +284,19 @@ class MainModel
         //récupère derniere commande effectuée (celle que l'on vient d'ajouter dans addOrder)
         $idOrder = $this->getLastOrder($_SESSION['user'][0]['idTeacher']); 
 
-        //recup liste machines
+        //récupère la liste des machines
         $listMachines = $this->getMachineCoffeePrices(); 
 
         foreach ($conso as $idMachine => $nbCafe) {  
             if($nbCafe!="" && $nbCafe!=0){
                 foreach($listMachines as $machine){
-                    if($machine['idMachine'] == $idMachine){
-                        // echo $idMachine . " " . $idOrder[0]['idOrder']. " " . $nbCafe. " " . $machine['macCoffeePrice'];
-                        // die();
-                        $add = $this->addInclude($idMachine, $idOrder[0]['idOrder'], $nbCafe, $machine['macCoffeePrice']);
+                    if($machine['idMachine'] == $idMachine){ 
+                        $addInclude = $this->addInclude($idMachine, $idOrder[0]['idOrder'], $nbCafe, $machine['macCoffeePrice']);
                     }
                 } 
             }
         }
+        return true;
     }
 
     /**
@@ -307,9 +305,9 @@ class MainModel
      * @param [int] $idTeacher
      * @return array
      */
-    private function getLastOrder($idTeacher)
+    public function getLastOrder($idTeacher)
     {
-        $query ="SELECT MAX(`idOrder`) as idOrder FROM `t_order` WHERE fkTeacher=:idTeacher"; 
+        $query ="SELECT `idOrder`,`ordTotal`, `ordTotalPaid` FROM `t_order` WHERE fkTeacher=:idTeacher ORDER BY `idOrder` DESC LIMIT 1 "; 
         $binds=array(
             0=>array(
                 'var'=>$idTeacher,
@@ -353,6 +351,26 @@ class MainModel
                 'var'=>$coffeePrice,
                 'marker'=>':coffeePrice',
                 'type'=>PDO::PARAM_STR 
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
+
+    /**
+     * récupère les quantités de café et les id des machines d'une commande
+     *
+     * @param [int] $idOrder
+     * @return array
+     */
+    public function getCoffeeQuantity($idOrder)
+    {
+        $query="SELECT `fkMachine`,`incCoffeeQuantity` FROM `t_include` WHERE `fkOrder` = :idOrder ";
+        $binds = array(
+            0=>array(
+                'var'=> $idOrder,
+                'marker'=>':idOrder',
+                'type'=>PDO::PARAM_STR
             )
         );
         $result = $this->queryPrepareExecute($query, $binds);

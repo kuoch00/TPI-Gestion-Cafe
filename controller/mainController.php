@@ -16,11 +16,8 @@
         unset($_SESSION['user']);
         unset($_SESSION['connected']);
 
-        
         //tentative de connexion
-        if(!isset($_SESSION['connected'])){
-
-        
+        if(!isset($_SESSION['connected'])){ 
             if(($_GET['login'])=='connect'){
                 $conn = new MainModel();
                 $teacher = $conn->checkConnexion($_POST['username'], $_POST['password']);
@@ -40,8 +37,7 @@
                         echo 'user is connected';
                         print_r($teacher);
                         header('Location: ?coffee');
-                    }
-                    
+                    } 
                 }
                 //connexion ratée : Retour a la page de connexion
                 else{
@@ -73,35 +69,98 @@
     }
 
     //formulaire / ajout / voir consommation de café
-    elseif (isset($_GET["coffee"])){
-        //page ajout consommation de café
-        if($_GET['coffee']=='add'){ 
-            $conn = new MainModel();
-            //tableau de tous les lieux
-            $locations = $conn->getAllLocations(); 
-            //tableau de toutes les machines de chaque lieu
-            foreach ($locations as $location) {
-                $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']);
-            }
-            include('view/addCoffeeConso.php');
-        }
-        //ajout de la consommation dans la base de données
-        elseif($_GET['coffee']=='addConso'){
-            //print_r($_POST);//affiche les id de chaque machine ainsi que le nombre de cafés consommés par semaine
-            $conn = new MainModel();
-            //ajout de la consommation de café dans la base de données
-            $conn->addConso($_POST);
-            
-        }
-        //voir bilan du café consommé
-        elseif($_GET['coffee']=='view'){
-            
-        }
-        else{
-            header('location: ?coffee=add');
-        }
+    elseif (isset($_GET['coffee'])){
+        switch($_GET['coffee']){
+            case 'add' :
+                $conn = new MainModel();
+                //tableau de tous les lieux
+                $locations = $conn->getAllLocations(); 
+                //tableau de toutes les machines de chaque lieu
+                foreach ($locations as $location) {
+                    $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']);
+                }
+                include('view/addCoffeeConso.php');
+                break;
+            case 'addConso' :
+                $conn = new MainModel();
+                //ajout de la consommation de café dans la base de données
+                $addConso = $conn->addConso($_POST);
+                
+                header('Location: ?coffee=view');
+                break;
+            case 'view' :
+                $conn = new MainModel(); 
+                $locations = $conn->getAllLocations();
+                foreach($locations as $location){
+                    $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']); 
+                    //machine['idMachine] == t_include.fkMachine =>
+                } 
+                //recupère les données de la dernière commande
+                $lastOrder = $conn->getLastOrder($_SESSION['user'][0]['idTeacher']);
 
-    }
+                $coffeeQuantity = $conn->getCoffeeQuantity($lastOrder[0]['idOrder']);
+                $total = $lastOrder[0]['ordTotal'];
+                // print_r($total);
+                if($lastOrder[0]['ordTotalPaid']){
+                    $status= "Payé";
+                }
+                else{
+                    $status = "En attente de paiement";
+                }
+                include('view/viewCoffeeConso.php');
+                break;
+            default :
+                header('Location: ?coffee=add');
+                break;
+            
+        }
+        //page ajout consommation de café
+        // if($_GET['coffee']=='add'){ 
+        //     $conn = new MainModel();
+        //     //tableau de tous les lieux
+        //     $locations = $conn->getAllLocations(); 
+        //     //tableau de toutes les machines de chaque lieu
+        //     foreach ($locations as $location) {
+        //         $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']);
+        //     }
+        //     include('view/addCoffeeConso.php');
+        // }
+        //ajout de la consommation dans la base de données
+        // elseif($_GET['coffee']=='addConso'){
+        //     //print_r($_POST);//affiche les id de chaque machine ainsi que le nombre de cafés consommés par semaine
+        //     $conn = new MainModel();
+        //     //ajout de la consommation de café dans la base de données
+        //     $addConso = $conn->addConso($_POST);
+            
+        //     header('Location: ?coffee=view');
+        // }
+        //voir bilan du café consommé
+        // elseif($_GET['coffee']=='view'){
+            // $conn = new MainModel();
+            
+            // $locations = $conn->getAllLocations();
+            // foreach($locations as $location){
+            //     $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']); 
+            //     //machine['idMachine] == t_include.fkMachine =>
+            // } 
+            // //recupère les données de la dernière commande
+            // $lastOrder = $conn->getLastOrder($_SESSION['user'][0]['idTeacher']);
+
+            // $coffeeQuantity = $conn->getCoffeeQuantity($lastOrder[0]['idOrder']);
+            // $total = $lastOrder[0]['ordTotal'];
+            // // print_r($total);
+            // if($lastOrder[0]['ordTotalPaid']){
+            //     $status= "Payé";
+            // }
+            // else{
+            //     $status = "En attente de paiement";
+            // }
+            // include('view/viewCoffeeConso.php');
+        }
+        // else{
+        //     header('Location: ?coffee=add');
+        // } 
+        // }
 
     //espace administrateur
     elseif (isset($_GET["admin"])){
@@ -109,9 +168,7 @@
         if($page == 'home'){
 
         }
-        
-        
-        
+         
     }
     else{
         // permet de faire une redirection directement la page home s'il n'y a rien (index)
