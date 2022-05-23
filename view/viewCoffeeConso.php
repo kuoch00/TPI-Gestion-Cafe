@@ -31,11 +31,8 @@
                         foreach($coffeeQuantity as $coffee){  
                             //nb café indiqué
                             if($coffee['fkMachine'] == $machine['idMachine'] && $coffee['incCoffeeQuantity']!=""){ ?>   
-                                <td><?=$coffee['incCoffeeQuantity']?></td> <?php 
-                            }
-                            //si aucun café
-                            else{?>
-                                <td>0</td><?php
+                                <td><?=$coffee['incCoffeeQuantity']?></td> <?php
+                                break;
                             }
                         } ?>
                     </tr> <?php

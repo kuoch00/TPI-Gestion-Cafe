@@ -1,6 +1,12 @@
 <div> 
     <h3>Admin</h3>
-    <!-- alerte si commande pas ajoutée ? -->
+    <!-- alerte si commande pas ajoutée ? --> 
+    <?php
+        if(isset($machineAdded) && $machineAdded){?>
+            <p>machine correctement ajoutée</p><?php
+        }
+    ?>
+
     <a href="?coffee=add" role="button">Ajouter ma consommation de café</a>
     <a href="?coffee=view" role="button">Voir ma consommation de café</a>
 
@@ -17,8 +23,7 @@
                 <th>Prix du café</th>
             </tr>
         </thead>
-        <tbody>
-            <?php
+        <tbody><?php 
             foreach($machines as $machine){?>
                 <tr>
                     <th><?=$machine['idMachine']?></th>
@@ -26,12 +31,9 @@
                     <td><?=$machine['macType']?></td>
                     <td><?=$machine['macLocation']?></td>
                     <td><?=$machine['macCoffeePrice']?></td>
-                </tr> 
-            <?php
-            }
-            ?>
+                </tr><?php 
+            }?> 
         </tbody>
-
     </table>
 
     <h3>Liste des consommations de café 2022-2023</h3>
@@ -54,8 +56,8 @@
                 <td><?=$teacher['teaFirstname']?></td>
                 <td><?=$teacher['teaLastname']?></td>
                 <td><?=$teacher['ordTotal']?></td>
-                <td><?=$teacher['ordTotalPaid']?></td>
-                <td><?=$teacher['ordPaymentDate']?></td> 
+                <td><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] : '-'?></td>
+                <td><?=$teacher['ordPaymentDate'] ? $teacher['ordPaymentDate'] : '-'?></td> 
                 <td><a href="?admin=updatePaymentForm"><i class="fa-solid fa-pen">a</i></a></td>
             </tr><?php
             }?> 

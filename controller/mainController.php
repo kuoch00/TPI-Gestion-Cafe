@@ -119,18 +119,18 @@
         $conn = new AdminModel();
         switch($_GET['admin']){
             case 'home':
+                
                 $machines = $conn->getMachines();
                 $teachers = $conn->getTeachers();
                 include('view/admin/home.php');
                 break;
             case 'addMachineForm' :
+                $machines = $conn->getMachines();
                 include('view/admin/addMachine.php');
                 break;
             case 'addMachine' :
-                //si new type de café
-                    //add new type
-                //si pas nouveau type de café
-                $add = $conn->addMachine($_POST['name'], $_POST['emplacement'], $_POST['type']);
+                $add = $conn->addMachine($_POST['nom'], $_POST['prix'], $_POST['type'], $_POST['location']);
+                header('Location: ?admin=home');
                 break;
             case 'updateCoffeePriceForm' :
                 break;

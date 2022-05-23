@@ -30,11 +30,116 @@ class AdminModel extends MainModel
         return $result;
     }
 
-    public function addMachine($name, $location, $type)
+    /**
+     * Ajout d'une nouvelle machine à café
+     *
+     * @param [string] $name
+     * @param [decimal] $price
+     * @param [string] $type
+     * @param [string] $location
+     * @return void
+     */
+    public function addMachine($name, $price, $type, $location)
     {
-        //INSERT INTO `t_machine` (`idMachine`, `macName`, `fkLocation`, `fkTypeMachine`) VALUES (NULL, 'a', '1', '2') 
-        $query="INSERT INTO t_machine SET macName=:name, fkLocation=:location, fkType=:type";
+        //verifie si type existe
+        $typeExists = $this->getTypeId($type);
+        if($typeExists){
+            $typeId = $typeExists; 
+        }
+        else{
+            //ajoute nouveau type
+            $this->addType($type, $price);
+            $typeId = $this->getTypeId($type);
+        } 
+        $locationId = $this->getLocationId($location); 
+        $query="INSERT INTO t_machine SET macName=:name, fkLocation=:location, fkTypeMachine=:type";
+        $binds=array(
+            0=>array(
+                'var'=>$name,
+                'marker'=>':name',
+                'type'=>PDO::PARAM_STR  
+            ),
+            1=>array(
+                'var'=>$locationId[0]['idLocation'],
+                'marker'=>':location',
+                'type'=>PDO::PARAM_STR  
+            ),
+            2=>array(
+                'var'=>$typeId[0]['idTypeMachine'],
+                'marker'=>':type',
+                'type'=>PDO::PARAM_STR  
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+        return $result;
         
+    }
+
+    /**
+     * récupère l'id du type de la machine à café
+     *
+     * @param [string] $type
+     * @return void
+     */
+    private function getTypeId($type)
+    {
+        $query="SELECT idTypeMachine FROM t_typemachine WHERE typName=:type";
+        $binds=array(
+            0=>array(
+                'var'=>$type,
+                'marker'=>':type',
+                'type'=>PDO::PARAM_STR 
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+        return $result;
+
+    }
+
+    /**
+     * ajout nouveau type de machine à café
+     *
+     * @param [string] $name
+     * @param [type] $price
+     * @return void
+     */
+    private function addType($name, $price)
+    {
+        $query="INSERT INTO t_typemachine SET typCoffeePrice=:price, typName=:name";
+        $binds=array(
+            0=>array(
+                'var'=>$price,
+                'marker'=>':price',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=>$name,
+                'marker'=>':name',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
+
+    /**
+     * récupère l'id de l'emplacement de la machine a café
+     *
+     * @param [type] $locationName
+     * @return void
+     */
+    private function getLocationId($locationName)
+    {
+        $query="SELECT idLocation FROM `t_location` WHERE `locName` = :locationName";
+        $binds=array(
+            0=>array(
+                'var'=>$locationName,
+                'marker'=>':locationName',
+                'type'=>PDO::PARAM_STR 
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+        return $result;
     }
 }
 
