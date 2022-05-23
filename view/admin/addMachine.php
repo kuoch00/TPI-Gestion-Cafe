@@ -20,7 +20,7 @@
         <!-- affiche liste type existants (datalist) -->
         <p>ne pas remplir si le type de machine existe !</p>
         <label for="prix">Prix du café</label>
-        <input placeholder="0" type="number" name="prix" min="0" max="99.99" step="0.01">
+        <input value="0" type="number" name="prix" min="0" max="99.99" step="0.01">
 
         <label for="emplacement">Emplacement</label>
         <!-- <input type="text" name="emplacement" list="machineLocations"> -->

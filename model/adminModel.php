@@ -23,12 +23,34 @@ class AdminModel extends MainModel
      */
     public function getTeachers()
     {
-        $query="SELECT `fkTeacher`, t_teacher.teaFirstname, t_teacher.teaLastname, `ordTotal`,`ordTotalPaid`,`ordPaymentDate` FROM `t_order` 
+        $query="SELECT `fkTeacher`, t_teacher.teaFirstname, t_teacher.teaLastname, `ordTotal`,`ordTotalPaid`,`ordPaymentDate`, idOrder FROM `t_order` 
         INNER JOIN t_teacher on t_teacher.idTeacher = t_order.fkTeacher
         WHERE `ordDate` BETWEEN '2022-01-01' AND '2022-07-31'";
         $result=$this->querySimpleExecute($query);
         return $result;
     }
+
+    public function getOrder($id)
+    {
+        $query="SELECT `idOrder`,`ordTotal`,ordDate ,`fkTeacher`,t_teacher.teaFirstname, t_teacher.teaLastname FROM `t_order`
+        INNER JOIN t_teacher ON t_teacher.idTeacher = t_order.fkTeacher
+        WHERE `idOrder`=:id";
+        $binds=array(
+            0=>array(
+                'var'=>$id,
+                'marker'=>':id',
+                'type'=>PDO::PARAM_STR   
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
+
+    // public function getTeacher($id)
+    // {
+    //     $query = "SELECT  `fkTeacher`, t_teacher.teaFirstname, t_teacher.teaLastname, idOrder, ordTotal FROM t_order
+    //     INNER JOIN t_teacher on t_teacher.idTeacher = t_order.fkTeacher";
+    // }
 
     /**
      * Ajout d'une nouvelle machine à café
@@ -140,6 +162,69 @@ class AdminModel extends MainModel
         );
         $result = $this->queryPrepareExecute($query, $binds);
         return $result;
+    }
+
+    /**
+     * récupère tous les types de machine à café
+     *
+     * @return array
+     */
+    public function getAllTypes()
+    {
+        $query="SELECT `idTypeMachine`,`typCoffeePrice`,`typName` FROM `t_typemachine`";
+        $result = $this->querySimpleExecute($query);
+        return $result;
+    }
+
+    /**
+     * Met a jour le prix des cafés
+     *
+     * @param [type] $prices
+     * @return void
+     */
+    public function updateCoffeePrices($prices)
+    {
+        foreach ($prices as $id=>$price){
+            $query = "UPDATE t_typemachine SET typCoffeePrice = :price WHERE t_typemachine.idTypeMachine = :id ";
+            $binds=array(
+                0=>array(
+                    'var'=> $id,
+                    'marker'=>':id',
+                    'type'=>PDO::PARAM_STR
+                ),
+                1=>array(
+                    'var'=>$price,
+                    'marker'=>':price',
+                    'type'=>PDO::PARAM_STR
+                )
+            );
+            $result = $this->queryPrepareExecute($query, $binds); 
+        }
+       
+    }
+
+    public function addPayment($id, $amount, $date)
+    {
+        $query="UPDATE `t_order` SET `ordPaymentDate` = :date , `ordTotalPaid` = :amount WHERE `t_order`.`idOrder` = :id";
+        $binds=array(
+            0=>array(
+                'var'=>$id,
+                'marker'=>':id',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=>$amount,
+                'marker'=>':amount',
+                'type'=>PDO::PARAM_STR
+            ),
+            2=>array(
+                'var'=>$date,
+                'marker'=>':date',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+
     }
 }
 

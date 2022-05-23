@@ -58,7 +58,7 @@
                 <td><?=$teacher['ordTotal']?></td>
                 <td><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] : '-'?></td>
                 <td><?=$teacher['ordPaymentDate'] ? $teacher['ordPaymentDate'] : '-'?></td> 
-                <td><a href="?admin=updatePaymentForm"><i class="fa-solid fa-pen">a</i></a></td>
+                <td><a href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i sclass="fa-solid fa-pen">a</i></a></td>
             </tr><?php
             }?> 
         </tbody> 

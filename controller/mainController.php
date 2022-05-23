@@ -119,7 +119,6 @@
         $conn = new AdminModel();
         switch($_GET['admin']){
             case 'home':
-                
                 $machines = $conn->getMachines();
                 $teachers = $conn->getTeachers();
                 include('view/admin/home.php');
@@ -129,16 +128,30 @@
                 include('view/admin/addMachine.php');
                 break;
             case 'addMachine' :
-                $add = $conn->addMachine($_POST['nom'], $_POST['prix'], $_POST['type'], $_POST['location']);
+                $conn->addMachine($_POST['nom'], $_POST['prix'], $_POST['type'], $_POST['location']);
                 header('Location: ?admin=home');
                 break;
             case 'updateCoffeePriceForm' :
+                $types = $conn->getAllTypes();
+                include('view/admin/editCoffeePrice.php');
                 break;
-            case 'updateCoffeePrice' :
+            case 'updateCoffeePrice' : 
+                // die();
+                $conn->updateCoffeePrices($_POST);
+                header('Location: ?admin=home');
                 break;
             case 'updatePaymentForm':
+                if(isset($_GET['id']) && $_GET['id']){
+                    $id = $_GET['id']; 
+                    $order = $conn->getOrder($id);
+                    include('view/admin/addPayment.php');
+                }
                 break;
             case 'updatePayment':
+                if(isset($_GET['id']) && $_GET['id']){
+                    $id = $_GET['id']; 
+                    $conn->addPayment($id, $_POST['amount'], $_POST['paymentDate']);
+                }
                 break;
             default :
                 header('Location: ?admin=home');
