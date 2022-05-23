@@ -12,7 +12,8 @@
         <input type="number" name="amount" value="<?=$order[0]['ordTotal']?>" min="<?=$order[0]['ordTotal']?>" step=".01" id="" required>
 
         <label for="date">Date de paiement</label>
-        <input type="date" name="paymentDate" id="paymentDate" min="<?=$order[0]['ordDate']?>" required>
+        
+        <input type="date" value="<?=$date?>" name="paymentDate" id="paymentDate" min="<?=$order[0]['ordDate']?>" max="<?=$date?>" required>
     
         <button type="submit">Valider</button>
     </div>

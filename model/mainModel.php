@@ -377,6 +377,52 @@ class MainModel
         return $result;
     }
 
+    public function hasOrdered($id)
+    {
+        $currentMonth = date('m');
+        //si date actuelle avant aout (commande en fin d'année scolaire...)
+        if($currentMonth<'08'){
+            $date1 = date('Y')-1 . "-08-01";
+            $date2 = date('Y') . "-07-31";
+        }
+        else{//date actuelle = aout et après
+            $date1 = date('Y') . "-08-01";
+            $date2 = date('Y')+1 . "-07-31"; 
+        }
+
+        $query = "SELECT `idOrder` FROM `t_order` WHERE `fkTeacher` LIKE :id AND `ordDate` BETWEEN :date1 AND :date2 ";
+        $binds=array(
+            0=>array(
+                'var'=> $id,
+                'marker'=>':id',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=> $date1,
+                'marker'=>':date1',
+                'type'=>PDO::PARAM_STR
+            ),
+            2=>array(
+                'var'=> $date2,
+                'marker'=>':date2',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result= $this->queryPrepareExecute($query, $binds);
+        return $result;
+        // echo 'cc';
+        // die();
+        // /**
+        //  * date actuelle
+        //  * 
+        //  * si après aout : année en cours - année+1 
+        //  * si avant aout : année-1 - annee en cours
+        //  * 
+        //  * si order avec cette id existe : true
+        //  * sinon : false
+        //  */
+    }
+
 }
 
 

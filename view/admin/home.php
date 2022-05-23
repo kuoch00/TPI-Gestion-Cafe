@@ -7,8 +7,15 @@
         }
     ?>
 
-    <a href="?coffee=add" role="button">Ajouter ma consommation de café</a>
-    <a href="?coffee=view" role="button">Voir ma consommation de café</a>
+        <?php
+        if(isset($hasOrdered) && $hasOrdered){?>
+            <a href="?coffee=view" role="button">Voir ma consommation de café</a><?php
+        }
+        else{?>
+            <a href="?coffee=add" role="button">Ajouter ma consommation de café</a><?php
+        }
+        ?>
+    
 
     <h3>Machines a café</h3>
     <a href="?admin=addMachineForm">Ajouter une machine à café</a>
@@ -58,9 +65,21 @@
                 <td><?=$teacher['ordTotal']?></td>
                 <td><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] : '-'?></td>
                 <td><?=$teacher['ordPaymentDate'] ? $teacher['ordPaymentDate'] : '-'?></td> 
-                <td><a href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i sclass="fa-solid fa-pen">a</i></a></td>
+                <?php
+                if(!$teacher['ordPaymentDate'] && !$teacher['ordTotalPaid']){?>
+                    <td><a href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i sclass="fa-solid fa-pen">a</i></a></td><?php
+                }
+                else{
+                    //class disabled de bootstrap + classe pour make icon look disable?> 
+                    <td><a><i sclass="fa-solid fa-pen">a</i></a></td><?php
+                }
+                ?> 
             </tr><?php
             }?> 
+
         </tbody> 
     </table>
+    <?php
+    
+    ?>
 </div>

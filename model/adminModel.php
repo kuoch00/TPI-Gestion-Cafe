@@ -30,6 +30,12 @@ class AdminModel extends MainModel
         return $result;
     }
 
+    /**
+     * récupère les données d'une commande
+     *
+     * @param [int] $id
+     * @return array
+     */
     public function getOrder($id)
     {
         $query="SELECT `idOrder`,`ordTotal`,ordDate ,`fkTeacher`,t_teacher.teaFirstname, t_teacher.teaLastname FROM `t_order`
@@ -45,12 +51,6 @@ class AdminModel extends MainModel
         $result = $this->queryPrepareExecute($query, $binds);
         return $result;
     }
-
-    // public function getTeacher($id)
-    // {
-    //     $query = "SELECT  `fkTeacher`, t_teacher.teaFirstname, t_teacher.teaLastname, idOrder, ordTotal FROM t_order
-    //     INNER JOIN t_teacher on t_teacher.idTeacher = t_order.fkTeacher";
-    // }
 
     /**
      * Ajout d'une nouvelle machine à café
@@ -203,6 +203,14 @@ class AdminModel extends MainModel
        
     }
 
+    /**
+     * ajout du paiement dans la base de données
+     *
+     * @param [int] $id
+     * @param [decimal] $amount
+     * @param [date] $date
+     * @return void
+     */
     public function addPayment($id, $amount, $date)
     {
         $query="UPDATE `t_order` SET `ordPaymentDate` = :date , `ordTotalPaid` = :amount WHERE `t_order`.`idOrder` = :id";
@@ -223,8 +231,7 @@ class AdminModel extends MainModel
                 'type'=>PDO::PARAM_STR
             )
         );
-        $result = $this->queryPrepareExecute($query, $binds);
-
+        $this->queryPrepareExecute($query, $binds); 
     }
 }
 

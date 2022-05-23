@@ -72,15 +72,31 @@
     //formulaire / ajout / voir consommation de café
     elseif (isset($_GET['coffee'])){
         $conn = new MainModel();
+        $currentMonth = date('m');
+        //si date actuelle avant aout (commande en fin d'année scolaire...)
+        if($currentMonth<'08'){
+            $year1 = date('Y')-1;
+            $year2 = date('Y');
+        }
+        else{//date actuelle = aout et après
+            $year1 = date('Y');
+            $year2 = date('Y'); 
+        }
         switch($_GET['coffee']){ 
             case 'add' : 
-                //tableau de tous les lieux
-                $locations = $conn->getAllLocations(); 
-                //tableau de toutes les machines de chaque lieu
-                foreach ($locations as $location) {
-                    $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']);
+                //verifie si conso deja commandée :
+                if($conn->hasOrdered($_SESSION['user'][0]['idTeacher'])){
+                    header('Location: ?coffee=view');
                 }
-                include('view/addCoffeeConso.php');
+                else{
+                    //tableau de tous les lieux
+                    $locations = $conn->getAllLocations(); 
+                    //tableau de toutes les machines de chaque lieu
+                    foreach ($locations as $location) {
+                        $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']);
+                    }
+                    include('view/addCoffeeConso.php');
+                }   
                 break;
             case 'addConso' : 
                 //ajout de la consommation de café dans la base de données
@@ -119,6 +135,7 @@
         $conn = new AdminModel();
         switch($_GET['admin']){
             case 'home':
+                $hasOrdered = $conn->hasOrdered($_SESSION['user'][0]['idTeacher']);
                 $machines = $conn->getMachines();
                 $teachers = $conn->getTeachers();
                 include('view/admin/home.php');
@@ -144,6 +161,7 @@
                 if(isset($_GET['id']) && $_GET['id']){
                     $id = $_GET['id']; 
                     $order = $conn->getOrder($id);
+                    $date = date('Y-m-d');
                     include('view/admin/addPayment.php');
                 }
                 break;
