@@ -138,6 +138,7 @@
                 break;
             case 'addMachineForm' :
                 $machines = $conn->getMachines();
+                $locations = $conn->getAllLocations();
                 include('view/admin/addMachine.php');
                 break;
             case 'addMachine' :
