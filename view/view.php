@@ -14,4 +14,4 @@
     <?php
     include('header.php');
     ?>
-</body>
+<!-- </body> se trouve dans footer.html -->

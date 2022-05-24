@@ -43,7 +43,7 @@
         </tbody>
     </table>
 
-    <h3>Liste des consommations de café 2022-2023</h3>
+    <h3>Liste des consommations de café <?=$years['year1'] . '-'. $years['year2']?></h3>
     <table>
         <thead>
             <tr>

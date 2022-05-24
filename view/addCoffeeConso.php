@@ -18,7 +18,7 @@
 
 
  <!-- si admin : bouton retour vers admin home -->
- <h3>Ajout de la consommation de café <?=$year1 .  " - " . $year2?></h3>
+ <h3>Ajout de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
 <div>
     <form action="?coffee=addConso" method="POST">
         <?php

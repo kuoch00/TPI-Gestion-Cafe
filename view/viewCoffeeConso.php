@@ -14,7 +14,7 @@
  }
  ?>
 
-<h3>Bilan de la consommation de café <?=$year1 .  " - " . $year2?></h3>
+<h3>Bilan de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
 <div><?php
     foreach($locations as $location){ ?> 
         <h3><?=$location['locName']?></h3>

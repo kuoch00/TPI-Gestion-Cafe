@@ -76,15 +76,7 @@
     elseif (isset($_GET['coffee'])){
         $conn = new MainModel();
         $currentMonth = date('m');
-        //si date actuelle avant aout (commande en fin d'année scolaire...)
-        if($currentMonth<'08'){
-            $year1 = date('Y')-1;
-            $year2 = date('Y');
-        }
-        else{//date actuelle = aout et après
-            $year1 = date('Y');
-            $year2 = date('Y'); 
-        }
+        $years = $conn->calcCurrentSchoolYear(date('m'));
         switch($_GET['coffee']){ 
             case 'add' : 
                 //verifie si conso deja commandée :
@@ -134,6 +126,11 @@
         $conn = new AdminModel();
         switch($_GET['admin']){
             case 'home':
+                //années
+                // $currentMonth = ;
+                //si date actuelle avant aout (commande en fin d'année scolaire...)
+                $years = $conn->calcCurrentSchoolYear(date('m'));
+
                 $hasOrdered = $conn->hasOrdered($_SESSION['user'][0]['idTeacher']);
                 $machines = $conn->getMachines();
                 $teachers = $conn->getTeachers();

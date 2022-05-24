@@ -377,6 +377,12 @@ class MainModel
         return $result;
     }
 
+    /**
+     * calcul si l'utilisateur a déja commandé sur l'année scolaire en cours
+     *
+     * @param [int] $id
+     * @return boolean
+     */
     public function hasOrdered($id)
     {
         $currentMonth = date('m');
@@ -410,17 +416,27 @@ class MainModel
         );
         $result= $this->queryPrepareExecute($query, $binds);
         return $result;
-        // echo 'cc';
-        // die();
-        // /**
-        //  * date actuelle
-        //  * 
-        //  * si après aout : année en cours - année+1 
-        //  * si avant aout : année-1 - annee en cours
-        //  * 
-        //  * si order avec cette id existe : true
-        //  * sinon : false
-        //  */
+        
+    }
+
+    /**
+     * calcul de l'année scolaire en cours
+     *
+     * @param [int] $currentMonth
+     * @return void
+     */
+    public function calcCurrentSchoolYear($currentMonth)
+    {
+        if($currentMonth<'08'){
+            $year1 = date('Y')-1;
+            $year2 = date('Y');
+        }
+        else{//date actuelle = aout et après
+            $year1 = date('Y');
+            $year2 = date('Y'); 
+        }
+        $years = array('year1'=> $year1, 'year2'=>$year2);
+        return $years;
     }
 
 }
