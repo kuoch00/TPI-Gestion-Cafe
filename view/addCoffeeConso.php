@@ -16,42 +16,43 @@
  
  ?>
 
-
- <!-- si admin : bouton retour vers admin home -->
- <h3>Ajout de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
-<div>
-    <form action="?coffee=addConso" method="POST">
-        <?php
-            foreach ($locations as $location) {
-                ?>
-                <h3><?=$location['locName']?></h3>
-                <table> 
-                    <thead>
-                        <tr>
-                            <th scope="col">Nom de la machine</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Prix du café</th>
-                            <th scope="col">Nb de cafés par semaine</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                        foreach ($machines[$location['idLocation']] as $machine) { 
-                        ?>  
-                        <tr>
-                            <th scope="row"><?=$machine['macName']?></th>
-                            <td><?=$machine['macType']?></td>
-                            <td><?=$machine['macCoffeePrice']?></td>
-                            <td><input type="number" name="<?=$machine['idMachine']?>"></td>
-                        </tr> 
-                    <?php
-                        }//fin foreach $machines
+<!-- si admin : bouton retour vers admin home -->
+    <h3>Ajout de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
+    <div class="col-xl-10">
+        <form action="?coffee=addConso" method="POST">
+            <?php
+                foreach ($locations as $location) {
                     ?>
-                    </tbody>  
-                </table>
-                <?php
-            }//fin foreach $locations
-        ?>
-        <button type="submit">Valider</button>
-    </form>
-</div>
+                    <h4 class="mt-4"><?=$location['locName']?></h4>
+                    <table class="table"> 
+                        <thead>
+                            <tr>
+                                <th scope="col">Nom de la machine</th>
+                                <th class="col-3" scope="col">Type</th>
+                                <th class="col-2" scope="col">Prix du café</th>
+                                <th class="col-lg-2 col-md-3" scope="col">Cafés par semaine</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                            foreach ($machines[$location['idLocation']] as $machine) { 
+                            ?>  
+                            <tr>
+                                <th scope="row"><?=$machine['macName']?></th>
+                                <td><?=$machine['macType']?></td>
+                                <td><?=$machine['macCoffeePrice']?> CHF</td>
+                                <td><input class="form-control" type="number" name="<?=$machine['idMachine']?>"></td>
+                            </tr> 
+                        <?php
+                            }//fin foreach $machines
+                        ?>
+                        </tbody>  
+                    </table>
+                    <?php
+                }//fin foreach $locations
+            ?>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-primary" type="submit">Valider</button>
+            </div>
+        </form>
+    </div>

@@ -15,10 +15,10 @@
  ?>
 
 <h3>Bilan de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
-<div><?php
+<div class="col-xl-5"><?php
     foreach($locations as $location){ ?> 
-        <h3><?=$location['locName']?></h3>
-        <table>
+        <h4 class="mt-4"><?=$location['locName']?></h4>
+        <table class="table">
             <thead>
                 <th>Nom de la machine</th>
                 <th>Nombre de cafés par semaine</th>

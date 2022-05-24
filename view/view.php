@@ -16,4 +16,5 @@
     <?php
     include('header.php');
     ?>
+    <div class="container"> 
 <!-- </body> se trouve dans footer.html -->
