@@ -6,4 +6,5 @@
  */
 session_start();
 include("./controller/mainController.php"); //header + page
+include('view/footer.html');
 ?>

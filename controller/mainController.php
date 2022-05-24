@@ -12,59 +12,62 @@
     include('view/view.php');
     
     //login
-    if(isset($_GET['login'])){
-        //temp pour faciliter les tests
-        unset($_SESSION['user']);
-        unset($_SESSION['connected']);
-
-        //tentative de connexion
-        if(!isset($_SESSION['connected'])){ 
+    if(isset($_GET['login'])){ 
+        //pas encore connecté :
+        if(!isset($_SESSION['connected']) || !isset($_SESSION['user'])){ 
+            //tentative de connexion une fois le nom d'utilisateur et mot de passe entré
             if(($_GET['login'])=='connect'){
                 $conn = new MainModel();
                 $teacher = $conn->checkConnexion($_POST['username'], $_POST['password']);
-                //connexion réussie
-                if($teacher){
-                    $_SESSION['user'] = $teacher;
-                    //Admin
-                    if($teacher[0]['teaIsAdmin']){
+                
+                if($teacher){//connexion réussie
+                    $connectError = false;
+                    //info de l'utilisateur 
+                    $_SESSION['user'] = $teacher; 
+                    
+                    //is Admin ?
+                    if($teacher[0]['teaIsAdmin']){ 
                         $_SESSION['connected'] = 'admin';
-                        echo 'admin is connected';
-                        print_r($teacher);
                         header('Location: ?admin');
                     }
                     //user
                     else{
                         $_SESSION['connected'] = 'user'; 
-                        echo 'user is connected';
-                        print_r($teacher);
                         header('Location: ?coffee');
                     } 
                 }
                 //connexion ratée : Retour a la page de connexion
                 else{
-                    //message erreur a faire passer??
-                    header('Location: ?login');
+                    //message erreur
+                    $connectError = true;
+                    //garde username pour retaper rapidement le mot de passe
+                    $username = $_POST['username'];
+                    include("view/login.php");
                 }
             }
             //page de connexion
             else{
-                include ("view/login.html");
+                include("view/login.php");
             }
-        }//fin isset $_SESSION['connected'] 
+        }
+        //connecté
         else{
-            //trouver un moyen pour ne pas répéter ce code...
-            if($teacher[0]['teaIsAdmin']){
-                $_SESSION['connected'] = 'admin';
-                echo 'admin is connected';
-                print_r($teacher);
-                header('Location: ?admin');
-            }
-            //user
+            //déconnexion
+            if($_GET['login']=='disconnect'){
+                unset($_SESSION['user']);
+                unset($_SESSION['connected']);
+                header('Location: ?login');
+            } 
+            //utilisateur connecté
             else{
-                $_SESSION['connected'] = 'user'; 
-                echo 'user is connected';
-                print_r($teacher);
-                header('Location: ?coffee');
+                //admin
+                if($_SESSION['connected'] == 'admin'){ 
+                    header('Location: ?admin');
+                }
+                //user
+                else{
+                    header('Location: ?coffee');
+                }
             }
         }
     }
@@ -101,26 +104,22 @@
             case 'addConso' : 
                 //ajout de la consommation de café dans la base de données
                 $addConso = $conn->addConso($_POST);
-                
                 header('Location: ?coffee=view');
                 break;
             case 'view' : 
                 $locations = $conn->getAllLocations();
                 foreach($locations as $location){
                     $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']); 
-                    //machine['idMachine] == t_include.fkMachine =>
                 } 
                 //recupère les données de la dernière commande
                 $lastOrder = $conn->getLastOrder($_SESSION['user'][0]['idTeacher']);
-
                 $coffeeQuantity = $conn->getCoffeeQuantity($lastOrder[0]['idOrder']);
                 $total = $lastOrder[0]['ordTotal'];
-                // print_r($total);
                 if($lastOrder[0]['ordTotalPaid']){
-                    $status= "Payé";
+                    $status = 'Payé';
                 }
                 else{
-                    $status = "En attente de paiement";
+                    $status = 'En attente de paiement';
                 }
                 include('view/viewCoffeeConso.php');
                 break;
@@ -177,8 +176,8 @@
         } 
     }
     else{
-        // permet de faire une redirection directement la page home s'il n'y a rien (index)
-        echo "<script>location.href=\"?login\"</script>";
+        // permet de faire une redirection directement la page home s'il n'y a rien
+        header('Location: ?login');
     }
     
     ob_end_flush(); 
