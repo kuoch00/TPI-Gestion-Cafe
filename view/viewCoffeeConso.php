@@ -17,15 +17,15 @@ else{
 }
  ?>
 
-<h3>Bilan de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
-<div class="">
-<div class=" d-flex align-items-center justify-content-center">
-<div class="col-md-5"><?php
+<h3 class="mt-4">Bilan de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
+
+<div class="d-flex">
+<div class="col col-md-8 col-lg-6"><?php
     foreach($locations as $location){ ?> 
         <h4 class="mt-4"><?=$location['locName']?></h4>
-        <table class="table">
+        <table class="table table-hover">
             <thead>
-                <th class="col-md-8">Nom de la machine</th>
+                <th class="col-sm-8">Nom de la machine</th>
                 <th>Cafés par semaine</th>
             </thead>
             <tbody>
@@ -59,6 +59,6 @@ else{
     <h4>Total : <?=$total?> CHF</h4>
     <p>Statut : <?=$status?></p>
     </div>
-</div>
+
 </div>
 

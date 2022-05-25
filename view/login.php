@@ -3,18 +3,13 @@
     date : 19.05.2022
     description : formulaire de connexion
  -->
- <?php
- if(isset($connectError) && $connectError){?>
-     <p>Nom d'utilisateur ou mot de passe erroné</p><?php
- }
- ?>
-
-    <h3>Connexion</h3>
+    
     <form action="?login=connect" method="POST">  
-            <div class="d-flex align-items-center justify-content-center "> 
+            <div class="d-flex align-items-center justify-content-center ">  
                 <div class="col-xl-5 ">
+                    <h3 class="mt-3">Connexion</h3>
                     <div class="row mt-3 ">
-                        <div class="col-xl-4">
+                        <div class="col-xl-4 d-flex align-items-center">
                             <label class="form-label" for="username">Nom d'utilisateur</label>
                         </div>
                         <div class="col">
@@ -23,11 +18,11 @@
                     </div>
 
                     <div class="row mt-3">
-                        <div class="col-xl-4">
+                        <div class="col-xl-4 d-flex align-items-center">
                             <label class="form-label" for="password">Mot de passe</label>
                         </div>
                         <div class="col">
-                            <input class="form-control" type="password" name="password">
+                            <input class="form-control <?=isset($connectError) && $connectError ? "is-invalid" : ''?>" type="password" name="password">
                         </div>
                     </div>
 

@@ -20,10 +20,10 @@ else{
 ?>
 
 <!-- si admin : bouton retour vers admin home -->
-    <h3>Ajout de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
+    <h3 class="mt-4">Ajout de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
     <div class="">
         <form action="?coffee=addConso" method="POST">
-            <div class="d-flex align-items-center justify-content-center ">
+            <div class="d-flex">
                 <div>
                     <?php
                     foreach ($locations as $location) {

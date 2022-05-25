@@ -3,13 +3,13 @@
         <i class="fa-solid fa-arrow-left"></i>
         Retour 
     </a>
-    <h3>Ajouter une machine à café</h3>
+    <h3 class="mt-4">Ajouter une machine à café</h3>
     <form  action="?admin=addMachine" method="POST">
-        <div class="d-flex align-items-center justify-content-center ">
-            <div class="col-lg-6">
+        <div class="d-flex ">
+            <div class="col-lg-8">
                 <div class="row my-2">
                     <div class="col">
-                    <label for="nom">Nom de la machine</label>
+                        <label for="nom">Nom de la machine</label>
                     </div>
                     <div class="col">
                         <input class="form-control" type="text" name="nom" required>
@@ -38,9 +38,14 @@
                     <div class="col">
                         
                         <label for="prix">
-                            <div class="d-flex">
-                                Prix du café
-                            <p class="form-text my-0">ne pas remplir si le type de machine existe !</p>
+                            <div class="row">
+                                <div class="col-4">
+                                    Prix du café
+                                </div>
+                                <div class="col">
+                                    <p class="form-text my-0">ne pas remplir si le type de machine existe !</p>
+                                </div>
+                            
                             </div>
                         </label>
                         

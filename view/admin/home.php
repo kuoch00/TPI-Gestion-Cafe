@@ -17,18 +17,18 @@
         ?>
     
 
-    <h3 class="mt-4">Machines a café</h3>
-    <a href="?admin=addMachineForm" class="btn btn-primary">Ajouter une machine à café</a>
-    <a href="?admin=updateCoffeePriceForm" role="button" class="btn btn-primary">Modifier le prix du café</a>
+    <h3 class="mt-5">Liste des machines à café</h3>
+    <a href="?admin=addMachineForm" class="btn btn-primary my-1">Ajouter une machine à café</a>
+    <a href="?admin=updateCoffeePriceForm" role="button" class="btn btn-primary my-1">Modifier le prix du café</a>
     <div class="col-lg-6">
-        <table class="table">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nom</th>
-                    <th>Type</th>
+                    <th class="col-4">Nom</th>
+                    <th class="col-2">Type</th>
                     <th>Lieu</th>
-                    <th class="col-lg-3">Prix du café</th>
+                    <th>Prix du café</th>
                 </tr>
             </thead>
             <tbody><?php 
@@ -38,14 +38,14 @@
                         <td><?=$machine['macName']?></td>
                         <td><?=$machine['macType']?></td>
                         <td><?=$machine['macLocation']?></td>
-                        <td><?=$machine['macCoffeePrice']?></td>
+                        <td class="text-end"><?=$machine['macCoffeePrice']?></td>
                     </tr><?php 
                 }?> 
             </tbody>
         </table>
     </div>
-    <h3 class="mt-4">Liste des consommations de café <?=$years['year1'] . '-'. $years['year2']?></h3>
-    <table class="table">
+    <h3 class="mt-5">Liste des consommations de café <?=$years['year1'] . '-'. $years['year2']?></h3>
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>ID</th>
@@ -63,8 +63,8 @@
                 <th><?=$teacher['fkTeacher']?></th>
                 <td><?=$teacher['teaFirstname']?></td>
                 <td><?=$teacher['teaLastname']?></td>
-                <td><?=$teacher['ordTotal']?></td>
-                <td><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] : '-'?></td>
+                <td class="text-end"><?=$teacher['ordTotal']?></td>
+                <td class="text-end"><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] : '-'?></td>
                 <td><?=$teacher['ordPaymentDate'] ? $teacher['ordPaymentDate'] : '-'?></td> 
                 <?php
                 if(!$teacher['ordPaymentDate'] && !$teacher['ordTotalPaid']){?>

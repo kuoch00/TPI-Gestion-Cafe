@@ -1,9 +1,12 @@
 <div>
-    <a href="?admin=home" role="button">Retour</a>
-    <h3>Changer le prix du café</h3>
-    <div class="d-flex align-items-center justify-content-center ">
+    <a href="?admin=home" role="button">
+        <i class="fa-solid fa-arrow-left"></i>
+        Retour 
+    </a>
+    <h3 class="mt-4">Changer le prix du café</h3>
+    <div class="d-flex col-lg-6">
         <form action="?admin=updateCoffeePrice" method="POST">
-        <table class="table">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th class="col">ID</th>
