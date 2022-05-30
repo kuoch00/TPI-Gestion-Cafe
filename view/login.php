@@ -23,6 +23,7 @@
                         </div>
                         <div class="col">
                             <input class="form-control <?=isset($connectError) && $connectError ? "is-invalid" : ''?>" type="password" name="password">
+                            <div class="invalid-feedback"> Nom d'utilisateur ou mot de passe erroné</div>
                         </div>
                     </div>
 

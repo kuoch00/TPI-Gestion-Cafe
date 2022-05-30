@@ -38,7 +38,7 @@
                         <td><?=$machine['macName']?></td>
                         <td><?=$machine['macType']?></td>
                         <td><?=$machine['macLocation']?></td>
-                        <td class="text-end"><?=$machine['macCoffeePrice']?></td>
+                        <td class="text-end"><?=$machine['macCoffeePrice']?> CHF</td>
                     </tr><?php 
                 }?> 
             </tbody>
@@ -63,8 +63,8 @@
                 <th><?=$teacher['fkTeacher']?></th>
                 <td><?=$teacher['teaFirstname']?></td>
                 <td><?=$teacher['teaLastname']?></td>
-                <td class="text-end"><?=$teacher['ordTotal']?></td>
-                <td class="text-end"><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] : '-'?></td>
+                <td class="text-end"><?=$teacher['ordTotal']?> CHF</td>
+                <td class="text-end"><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] . " CHF" : '-'?></td>
                 <td><?=$teacher['ordPaymentDate'] ? $teacher['ordPaymentDate'] : '-'?></td> 
                 <?php
                 if(!$teacher['ordPaymentDate'] && !$teacher['ordTotalPaid']){?>
