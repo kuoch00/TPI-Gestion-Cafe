@@ -36,7 +36,7 @@ else{
                     $valueAdded = false;
                     ?>
                     <tr>  
-                        <th><?=$machine['macName']?></th><?php
+                        <th class="text-break"><?=$machine['macName']?></th><?php
                         //chaque quantité 
                         foreach($coffeeQuantity as $coffee){  
                             //nb café indiqué
