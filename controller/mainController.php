@@ -145,7 +145,7 @@
                         include('view/admin/addMachine.php');
                         break;
                     case 'addMachine' :
-                        $conn->addMachine($_POST['nom'], $_POST['prix'], $_POST['type'], $_POST['location']);
+                        $conn->addMachine(htmlspecialchars($_POST['nom']), $_POST['prix'], htmlspecialchars($_POST['type']), $_POST['location']);
                         header('Location: ?admin=home');
                         break;
                     case 'updateCoffeePriceForm' :
