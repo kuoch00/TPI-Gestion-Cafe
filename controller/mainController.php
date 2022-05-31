@@ -178,6 +178,17 @@
                             $conn->addPayment($id, $_POST['amount'], $_POST['paymentDate']);
                             header('Location: ?admin=home');
                         } 
+                        break; 
+                    case 'viewConso':
+                        if(isset($_GET['id'])&&$_GET['id']){
+                            $years = $conn->calcCurrentSchoolYear(date('m'));
+                            $teacherOrder = $conn->getTeacherOrder($_GET['id']);
+                            
+                            include('view/admin/teacherOrder.php');
+                        }
+                        break;
+                    case 'editOrderForm': 
+                        include ('view/admin/editOrder.php');
                         break;
                     default :
                         header('Location: ?admin=home');

@@ -3,15 +3,17 @@
     <!-- alerte si commande pas ajoutée ? --> 
     <?php 
         if(isset($hasOrdered) && $hasOrdered){?>
-            <a href="?coffee=view" role="button" class="btn btn-primary">Voir ma consommation de café</a><?php
+            <a href="?coffee=view" role="button" class="btn btn-primary col-12 col-sm-auto">Voir ma consommation de café</a><?php
         }
         else{?>
-            <a href="?coffee=add" role="button" class="btn btn-primary">Ajouter ma consommation de café</a><?php
+            <a href="?coffee=add" role="button" class="btn btn-primary col-12 col-sm-auto">Ajouter ma consommation de café</a><?php
         }?>  
         
     <h3 class="mt-5">Liste des machines à café</h3>
-    <a href="?admin=addMachineForm" class="btn btn-primary my-1">Ajouter une machine à café</a>
-    <a href="?admin=updateCoffeePriceForm" role="button" class="btn btn-primary my-1">Modifier le prix du café</a>
+    <div class="">
+        <a href="?admin=addMachineForm" class="btn btn-primary my-1 me-1 col-12 col-sm-auto">Ajouter une machine à café</a>
+        <a href="?admin=updateCoffeePriceForm" role="button" class="btn btn-primary my-1 col-12 col-sm-auto">Modifier le prix du café</a>
+    </div>
     <div class="col-lg-6">
         <table class="table table-hover">
             <thead>
@@ -27,7 +29,7 @@
                 foreach($machines as $machine){?>
                     <tr>
                         <th><?=$machine['idMachine']?></th>
-                        <td><?=$machine['macName']?></td>
+                        <td class="text-break"><?=$machine['macName']?></td>
                         <td><?=$machine['macType']?></td>
                         <td><?=$machine['macLocation']?></td>
                         <td class="text-end"><?=$machine['macCoffeePrice']?> CHF</td>
@@ -40,18 +42,17 @@
     <h3 class="mt-5">Liste des consommations de café <?=$years['year1'] . '-'. $years['year2']?></h3>
     <!-- cache la table sur les petits ecrans -->
     
-    <div class="d-none d-sm-block"> 
+    <div class="d-none d-md-block"> 
         <table class="table table-hover"> 
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Prénom</th>
                     <th>Nom</th>
-                    <th d-none d-sm-block>Montant</th>
-                    <th d-none d-sm-block>Montant payé</th>
-                    <th d-none d-sm-block>Date de paiement</th>
-                    
-                    <th>Ajouter un paiement</th> 
+                    <th >Montant</th>
+                    <th >Montant payé</th>
+                    <th >Date de paiement</th>
+                    <th class="col-md-3"></th> 
                 </tr>
             </thead>
             <tbody><?php
@@ -59,14 +60,20 @@
                
                 <tr>
                     <th><?=$teacher['fkTeacher']?></th>
-                    <td><?=$teacher['teaFirstname']?></td>
-                    <td><?=$teacher['teaLastname']?></td>
+                    <td class="text-break"><?=$teacher['teaFirstname']?></td>
+                    <td class="text-break"><?=$teacher['teaLastname']?></td>
                     
                     <td class="text-end"><?=$teacher['ordTotal']?> CHF</td>
                     <td class="text-end"><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] . " CHF" : '-'?></td>
                     <td><?=$teacher['ordPaymentDate'] ? $teacher['ordPaymentDate'] : '-'?></td> 
                     
-                    <td><a href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-pen fa"></i></a></td>
+                    
+                    <td class="text-center">
+                        <a class="btn btn-primary" href="?admin=viewConso&id=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-magnifying-glass"></i></a>
+                        <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-plus"></i></a>
+                        <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-pen"></i></a>
+                    </td>
+     
                 </tr><?php
                 }?> 
 
@@ -75,54 +82,30 @@
     </div>
     
     <!-- table pour petits écrans -->
-    <div class="d-block d-sm-none"> 
+    <div class="d-block d-md-none"> 
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Prénom</th>
                     <th>Nom</th>
-                    <th>Paiement</th> 
+                    <th></th>  
                 </tr>
             </thead>
             <tbody><?php 
             foreach($teachers as $teacher){?>
-                <tr data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <tr>
                     <th><?=$teacher['fkTeacher']?></th>
-                    <td><?=$teacher['teaFirstname']?></td>
-                    <td><?=$teacher['teaLastname']?></td>
-                    <?php
-                        if(!$teacher['ordPaymentDate'] && !$teacher['ordTotalPaid']){?>
-                            <td class="text-center row"><a role="button" class="btn btn-primary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>">Ajouter</a></td><?php
-                        }
-                        else{
-                            //class disabled de bootstrap + classe pour make icon look disable?> 
-                            <td class="text-center row"><a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>">Modifier</a></td>
-                            
-                            <?php
-                        }
-                    ?>  
-                </tr>
-
+                    <td class="text-break"><?=$teacher['teaFirstname']?></td>
+                    <td class="text-break"><?=$teacher['teaLastname']?></td>
+                    <td class="text-center ">
+                    <a class="btn btn-primary" href="?admin=viewConso&id=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-magnifying-glass fa-sm"></i></a>
+                    <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-plus fa-sm"></i></a>
+                    <a role="button" class="btn btn-secondary" href="?admin=editOrderForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-pen fa-sm"></i></a>
+                    </td> 
+                </tr>  
                 <!-- //not working -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel"><?=$teacher['teaFirstname'] .  ' ' . $teacher['teaLastname']?></h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">  
-                            Montant : <?=$teacher['ordTotal']?> CHF<br>
-                            Montant payé : <?=$teacher['ordTotalPaid']?> CHF<br>
-                            Date de paiement : <?=$teacher['ordPaymentDate']?>
-                        </div>
-                        <div class="modal-footer"> 
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
-                        </div>
-                        </div>
-                    </div>
-                </div>
+                
                 
                 <?php } //fin foreach
                 ?>

@@ -436,6 +436,7 @@ class MainModel
             $year2 = date('Y'); 
         }
         $years = array('year1'=> $year1, 'year2'=>$year2);
+        
         return $years;
     }
 
