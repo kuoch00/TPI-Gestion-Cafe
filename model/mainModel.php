@@ -439,6 +439,45 @@ class MainModel
         return $years;
     }
 
+    /**
+     * récupère la dernière consommation de café de l'utilisateur
+     *
+     * @param [array] $years
+     * @return array
+     */
+    public function getLastConso($years, $id)
+    {
+        $date1 = $years['year1']-1 . "-08-01";
+        $date2 = $years['year2']-1 . "-07-31";
+        // $date1 = $years['year1'] . "-08-01";
+        // $date2 = $years['year2'] . "-07-31";
+
+        $query="SELECT t_machine.macName, `incCoffeeQuantity`, t_order.ordTotal FROM `t_include` 
+        INNER JOIN t_machine on t_machine.idMachine = t_include.fkMachine
+        INNER JOIN t_order on t_order.idOrder = t_include.fkOrder
+        WHERE t_order.fkTeacher LIKE :id AND
+        t_order.ordDate BETWEEN :date1 AND :date2";
+        $binds=array(
+            0=>array(
+                'var'=>$date1,
+                'marker'=>':date1',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=>$date2,
+                'marker'=>':date2',
+                'type'=>PDO::PARAM_STR
+            ),
+            2=>array(
+                'var'=>$id,
+                'marker'=>':id',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result=$this->queryPrepareExecute($query,$binds);
+        return $result;
+    }
+
 }
 
 

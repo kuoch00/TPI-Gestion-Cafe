@@ -85,8 +85,15 @@
                         header('Location: ?coffee=view');
                     }
                     else{
+                        //récupère dernière consommation de café
+                        // print_r();
+                        // die();
+                        // $id = $_SESSION['user'][0]['idTeacher'];
+                        $lastConso = $conn->getLastConso($years, $_SESSION['user'][0]['idTeacher']);
+
                         //tableau de tous les lieux
                         $locations = $conn->getAllLocations(); 
+                        
                         //tableau de toutes les machines de chaque lieu
                         foreach ($locations as $location) {
                             $machines[$location['idLocation']] = $conn->getAllMachinesFromLocation($location['idLocation']);

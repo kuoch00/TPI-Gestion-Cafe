@@ -252,6 +252,8 @@ class AdminModel extends MainModel
         );
         $this->queryPrepareExecute($query, $binds); 
     }
+
+    
 }
 
 

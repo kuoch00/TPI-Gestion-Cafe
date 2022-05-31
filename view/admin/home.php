@@ -8,6 +8,7 @@
         else{?>
             <a href="?coffee=add" role="button" class="btn btn-primary">Ajouter ma consommation de café</a><?php
         }?>  
+        
     <h3 class="mt-5">Liste des machines à café</h3>
     <a href="?admin=addMachineForm" class="btn btn-primary my-1">Ajouter une machine à café</a>
     <a href="?admin=updateCoffeePriceForm" role="button" class="btn btn-primary my-1">Modifier le prix du café</a>
@@ -64,15 +65,8 @@
                     <td class="text-end"><?=$teacher['ordTotal']?> CHF</td>
                     <td class="text-end"><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] . " CHF" : '-'?></td>
                     <td><?=$teacher['ordPaymentDate'] ? $teacher['ordPaymentDate'] : '-'?></td> 
-                    <?php
-                    if(!$teacher['ordPaymentDate'] && !$teacher['ordTotalPaid']){?>
-                        <td><a href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-pen fa"></i></a></td><?php
-                    }
-                    else{
-                        //class disabled de bootstrap + classe pour make icon look disable?> 
-                        <td><a><i class="fa-solid fa-pen fa-disabled"></i></a></td><?php
-                    }
-                    ?> 
+                    
+                    <td><a href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-pen fa"></i></a></td>
                 </tr><?php
                 }?> 
 
@@ -93,7 +87,7 @@
             </thead>
             <tbody><?php 
             foreach($teachers as $teacher){?>
-                <tr>
+                <tr data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <th><?=$teacher['fkTeacher']?></th>
                     <td><?=$teacher['teaFirstname']?></td>
                     <td><?=$teacher['teaLastname']?></td>
@@ -103,30 +97,35 @@
                         }
                         else{
                             //class disabled de bootstrap + classe pour make icon look disable?> 
-                            <td class="text-center row"><a role="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">Voir infos</a></td>
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel"><?=$teacher['teaFirstname'] .  ' ' . $teacher['teaLastname']?></h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">  
-                                        Montant : <?=$teacher['ordTotal']?> CHF<br>
-                                        Montant payé : <?=$teacher['ordTotalPaid']?> CHF<br>
-                                        Date de paiement : <?=$teacher['ordPaymentDate']?>
-                                    </div>
-                                    <div class="modal-footer"> 
-                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <td class="text-center row"><a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>">Modifier</a></td>
+                            
                             <?php
                         }
-                    ?> 
+                    ?>  
                 </tr>
-                <?php } ?>
+
+                <!-- //not working -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"><?=$teacher['teaFirstname'] .  ' ' . $teacher['teaLastname']?></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">  
+                            Montant : <?=$teacher['ordTotal']?> CHF<br>
+                            Montant payé : <?=$teacher['ordTotalPaid']?> CHF<br>
+                            Date de paiement : <?=$teacher['ordPaymentDate']?>
+                        </div>
+                        <div class="modal-footer"> 
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <?php } //fin foreach
+                ?>
             </tbody>
         </table>
     </div>

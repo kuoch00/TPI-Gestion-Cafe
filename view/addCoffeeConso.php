@@ -12,46 +12,66 @@
     }
 ?>
 
-<h3 class="mt-4">Ajout de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
-<div class="">
-    <form action="?coffee=addConso" method="POST">
-        <div class="d-flex">
-            <div>
-                <?php
-                foreach ($locations as $location) {
-                    ?>
-                    <h4 class="mt-4"><?=$location['locName']?></h4>
-                    <table class="table table-hover"> 
-                        <thead>
-                            <tr>
-                                <th scope="col-sm-6">Nom de la machine</th>
-                                <th class="col" scope="col">Type</th>
-                                <th class="col" scope="col">Prix du café</th>
-                                <th class="col-sm-4" scope="col">Cafés par semaine</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                            foreach ($machines[$location['idLocation']] as $machine) { 
-                            ?>  
-                            <tr>
-                                <th class="text-break" scope="row"><?=$machine['macName']?></th>
-                                <td><?=$machine['macType']?></td>
-                                <td><?=$machine['macCoffeePrice']?> CHF</td>
-                                <td><input class="form-control" type="number" value="0" name="<?=$machine['idMachine']?>" min = 0 max=100></td>
-                            </tr> 
-                        <?php
-                            }//fin foreach $machines
-                        ?>
-                        </tbody>  
-                    </table>
+<div class="col">
+    <h3 class="mt-4">Ajout de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
+    <div>
+        <form action="?coffee=addConso" method="POST">
+            <div class="d-flex">
+                <div>
                     <?php
-                }//fin foreach $locations
-                ?>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-primary" type="submit">Valider</button>
+                    foreach ($locations as $location) {
+                        if(!empty($machines[$location['idLocation']])){ //affiche pas si aucune machine dans le lieu ?>  
+                        
+                        <h4 class="mt-4"><?=$location['locName']?></h4>
+                        <table class="table table-hover"> 
+                            <thead>
+                                <tr>
+                                    <th class="align-middle">Nom de la machine</th>
+                                    <th class="align-middle">Type</th>
+                                    <th class="align-middle">Prix du café</th>
+                                    <th class="align-middle col-3">Cafés par semaine</th>
+                                    <th class="align-middle text-break">Nb cafés année passée</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                                foreach ($machines[$location['idLocation']] as $machine) { 
+                                ?>  
+                                <tr>
+                                    <th class="text-break" scope="row"><?=$machine['macName']?></th>
+                                    <td><?=$machine['macType']?></td>
+                                    <td> <div class="d-flex"> <?=$machine['macCoffeePrice']?><div class="d-none d-sm-block ms-1"> CHF</div> </div></td>
+                                    <td><input class="form-control" type="number" value="0" name="<?=$machine['idMachine']?>" min = 0 max=100></td>
+                                    <?php
+                                    $entered=false;
+                                    foreach($lastConso as $conso){
+                                        if($conso['macName']==$machine['macName']){?>
+                                            <td><?=$conso['incCoffeeQuantity']?></td> <?php  
+                                            $entered = true;
+                                            break ;
+                                        } 
+                                    }
+                                    if(!$entered){?>
+                                        <td>0</td> <?php
+                                    }
+                                    ?> 
+                                </tr> 
+                            <?php
+                                }//fin foreach $machines
+                            ?>
+                            </tbody>  
+                        </table>
+                        <?php 
+                        } //fin if !empty
+                    }//fin foreach $locations
+                    ?>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-primary" type="submit">Valider</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
+
+

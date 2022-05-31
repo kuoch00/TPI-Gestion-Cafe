@@ -21,40 +21,42 @@ else{
 
 <div class="d-flex">
 <div class="col col-md-8 col-lg-6"><?php
-    foreach($locations as $location){ ?> 
-        <h4 class="mt-4"><?=$location['locName']?></h4>
-        <table class="table table-hover">
-            <thead>
-                <th class="col-sm-8">Nom de la machine</th>
-                <th>Cafés par semaine</th>
-            </thead>
-            <tbody>
-                <?php  
-                //affiche toutes les machines d'un lieu
-                
-                foreach($machines[$location['idLocation']] as $machine){  
-                    $valueAdded = false;
-                    ?>
-                    <tr>  
-                        <th class="text-break"><?=$machine['macName']?></th><?php
-                        //chaque quantité 
-                        foreach($coffeeQuantity as $coffee){  
-                            //nb café indiqué
-                            if($coffee['fkMachine'] == $machine['idMachine'] && $coffee['incCoffeeQuantity']!=""){ ?>   
-                                <td><?=$coffee['incCoffeeQuantity']?></td> <?php
-                                $valueAdded = true;
-                                break;
-                            }
-                            
-                        } 
-                        if(!$valueAdded){?>
-                            <td>0</td><?php
-                        }
+    foreach($locations as $location){ 
+        if(!empty($machines[$location['idLocation']])){ ?>  
+            <h4 class="mt-4"><?=$location['locName']?></h4>
+            <table class="table table-hover">
+                <thead>
+                    <th class="col-sm-8">Nom de la machine</th>
+                    <th>Cafés par semaine</th>
+                </thead>
+                <tbody>
+                    <?php  
+                    //affiche toutes les machines d'un lieu
+                    
+                    foreach($machines[$location['idLocation']] as $machine){  
+                        $valueAdded = false;
                         ?>
-                    </tr> <?php
-                }?>
-            </tbody>
-        </table> <?php  
+                        <tr>  
+                            <th class="text-break"><?=$machine['macName']?></th><?php
+                            //chaque quantité 
+                            foreach($coffeeQuantity as $coffee){  
+                                //nb café indiqué
+                                if($coffee['fkMachine'] == $machine['idMachine'] && $coffee['incCoffeeQuantity']!=""){ ?>   
+                                    <td><?=$coffee['incCoffeeQuantity']?></td> <?php
+                                    $valueAdded = true;
+                                    break;
+                                }
+                                
+                            } 
+                            if(!$valueAdded){?>
+                                <td>0</td><?php
+                            }
+                            ?>
+                        </tr> <?php
+                    }?>
+                </tbody>
+            </table> <?php 
+        }//fin if !empty
     }//fin du foreach ?>
     <h4>Total : <?=$total?> CHF</h4>
     <p>Statut : <?=$status?></p>
