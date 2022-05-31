@@ -23,10 +23,29 @@ class AdminModel extends MainModel
      */
     public function getTeachers()
     {
-        $query="SELECT `fkTeacher`, t_teacher.teaFirstname, t_teacher.teaLastname, `ordTotal`,`ordTotalPaid`,`ordPaymentDate`, idOrder FROM `t_order` 
+        $years = $this->calcCurrentSchoolYear(date('m'));
+        // print_r($years);
+        
+        $date1 = $years['year1'] . "-08-01";
+        $date2 = $years['year2'] . "-07-31";
+        // die($date1);
+        $query="SELECT fkTeacher, t_teacher.teaFirstname, t_teacher.teaLastname, ordTotal, ordTotalPaid, ordPaymentDate, idOrder FROM t_order
         INNER JOIN t_teacher on t_teacher.idTeacher = t_order.fkTeacher
-        WHERE `ordDate` BETWEEN '2022-01-01' AND '2022-07-31'";
-        $result=$this->querySimpleExecute($query);
+        WHERE ordDate BETWEEN :date1 AND :date2";
+        $binds=array(
+            0=>array(
+                'var'=>$date1,
+                'marker'=>':date1',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=>$date2,
+                'marker'=>':date2',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result=$this->queryPrepareExecute($query, $binds);
+        // $result=$this->querySimpleExecute($query);
         return $result;
     }
 

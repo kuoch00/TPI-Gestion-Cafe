@@ -38,6 +38,7 @@
 
     <h3 class="mt-5">Liste des consommations de café <?=$years['year1'] . '-'. $years['year2']?></h3>
     <!-- cache la table sur les petits ecrans -->
+    
     <div class="d-none d-sm-block"> 
         <table class="table table-hover"> 
             <thead>
@@ -54,6 +55,7 @@
             </thead>
             <tbody><?php
                 foreach($teachers as $teacher){?>
+               
                 <tr>
                     <th><?=$teacher['fkTeacher']?></th>
                     <td><?=$teacher['teaFirstname']?></td>
