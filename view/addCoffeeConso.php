@@ -51,7 +51,7 @@
                                             break ;
                                         } 
                                     }
-                                    if(!$entered){?>
+                                    if(!$entered){//si aucune information: afficher 0?>
                                         <td>0</td> <?php
                                     }
                                     ?> 

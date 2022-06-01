@@ -46,7 +46,7 @@ else{
     </tr>
     <tr>
         <th>Montant payé</th>
-        <td><?=$teacherOrder[0]['ordTotalPaid'] ? $teacherOrder[0]['ordTotalPaid'] : 'Non payé'?></td>
+        <td><?=$teacherOrder[0]['ordTotalPaid'] ? $teacherOrder[0]['ordTotalPaid'] : '0.00'?></td>
     </tr>
     <tr>
         <th>Date de paiement</th>
