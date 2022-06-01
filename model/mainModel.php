@@ -288,13 +288,14 @@ class MainModel
         $listMachines = $this->getMachineCoffeePrices(); 
 
         foreach ($conso as $idMachine => $nbCafe) {  
-            if($nbCafe!="" && $nbCafe!=0){
-                foreach($listMachines as $machine){
-                    if($machine['idMachine'] == $idMachine){ 
-                        $addInclude = $this->addInclude($idMachine, $idOrder[0]['idOrder'], $nbCafe, $machine['macCoffeePrice']);
-                    }
-                } 
+            if($nbCafe!=""){
+                $nbCafe=0;
             }
+            foreach($listMachines as $machine){
+                if($machine['idMachine'] == $idMachine){ 
+                    $addInclude = $this->addInclude($idMachine, $idOrder[0]['idOrder'], $nbCafe, $machine['macCoffeePrice']);
+                }
+            } 
         }
         return true;
     }

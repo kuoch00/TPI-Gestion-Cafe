@@ -1,5 +1,8 @@
 <?php
 //TODO : Dates de query à modifier !!
+
+use LDAP\Result;
+
 class AdminModel extends MainModel
 {
     /**
@@ -253,7 +256,7 @@ class AdminModel extends MainModel
         $this->queryPrepareExecute($query, $binds); 
     }
 
-    public function getTeacherOrder($id)
+    public function getTeacherOrder($idTeacher)
     {
         $years = $this->calcCurrentSchoolYear(date('m'));
         $date1 = $years['year1'] . "-08-01";
@@ -275,7 +278,7 @@ class AdminModel extends MainModel
                 'type'=>PDO::PARAM_STR
             ),
             2=>array(
-                'var'=>$id,
+                'var'=>$idTeacher,
                 'marker'=>':id',
                 'type'=>PDO::PARAM_STR
             )
@@ -284,6 +287,151 @@ class AdminModel extends MainModel
         $result = $this->queryPrepareExecute($query,$binds);
         return $result;
 
+    }
+
+    /**
+     * récupère la consommation d'une commande
+     *
+     * @param [int] $idOrder
+     * @return array
+     */
+    public function getConsoOrder($idOrder)
+    {
+        $query="SELECT `fkMachine`, t_machine.macName,`incCoffeeQuantity` FROM `t_include` INNER JOIN t_machine On t_machine.idMachine = fkMachine WHERE `fkOrder` LIKE :id ";
+        
+        $binds=array(
+            0=>array(
+                'var'=>$idOrder,
+                'marker'=>':id',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
+
+    /**
+     * met a jour la commande avec les nouvelles quantités et le nouveau montant
+     *
+     * @param [type] $idOrder
+     * @param [type] $idMachine
+     * @param [type] $coffeeQuantity
+     * @return void
+     */
+    public function updateOrder($idOrder, $idTeacher, $consoMachines)
+    {
+        $total = 0;
+        //$machines = $this->getMachines();
+        //update in t_include
+        foreach($consoMachines as $idMachine=>$coffeeQuantity){
+            if($coffeeQuantity==""){
+                $coffeeQuantity=0;
+            }
+            $query="UPDATE `t_include` SET `incCoffeeQuantity` = :coffeeQuantity WHERE `t_include`.`fkMachine` = :idMachine AND `t_include`.`fkOrder` = :idOrder; ";
+            $binds=array(
+                0=>array(
+                    'var'=>$idOrder,
+                    'marker'=>':idOrder',
+                    'type'=>PDO::PARAM_STR
+                ),
+                1=>array(
+                    'var'=>$idMachine,
+                    'marker'=>':idMachine',
+                    'type'=>PDO::PARAM_STR
+                ),
+                2=>array(
+                    'var'=>$coffeeQuantity,
+                    'marker'=>':coffeeQuantity',
+                    'type'=>PDO::PARAM_STR
+                )
+            );
+            $this->queryPrepareExecute($query, $binds); 
+
+
+            $coffeePrice = $this->getOrderCoffeePrice($idOrder, $idMachine);
+            $total += $coffeeQuantity * $coffeePrice[0]['incCoffeePrice'];
+            // echo $total;
+        }
+
+        //get teacher and nb week
+        $nbWeek = $this->getTeacherNbWeek($idTeacher);
+        //calc total
+        $total = $total*$nbWeek[0]['teaNbWeek'];
+        // die($total);
+        
+
+        //update order now
+            //calc new total puis update
+            $this->updateOrderTotal($total, $idOrder);
+
+            
+            
+        
+    }
+
+    /**
+     * recupère le prix du café de la commande (au cas ou le prix aurait changé entre temps, qu'il ne s'applique pas.)
+     *
+     * @param [int] $idOrder
+     * @param [int] $idMachine
+     * @return array
+     */
+    private function getOrderCoffeePrice($idOrder, $idMachine)
+    {
+        $query="SELECT `incCoffeePrice` FROM `t_include` WHERE `fkMachine` = :idMachine AND `fkOrder` = :idOrder";
+        $binds=array(
+            0=>array(
+                'var'=>$idOrder,
+                'marker'=>':idOrder',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=>$idMachine,
+                'marker'=>':idMachine',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result= $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $total
+     * @param [type] $idOrder
+     * @return void
+     */
+    private function updateOrderTotal($total, $idOrder)
+    {
+        $query="UPDATE `t_order` SET `ordTotal` = :total WHERE `t_order`.`idOrder` = :idOrder; ";
+            $binds=array(
+                0=>array(
+                    'var'=>$total,
+                    'marker'=>':total',
+                    'type'=>PDO::PARAM_STR
+                ),
+                1=>array(
+                    'var'=>$idOrder,
+                    'marker'=>':idOrder',
+                    'type'=>PDO::PARAM_STR
+                )
+            );
+            $result= $this->queryPrepareExecute($query, $binds);
+    }
+
+    private function getTeacherNbWeek($idTeacher)
+    {
+        $query="SELECT `teaNbWeek` FROM `t_teacher` WHERE `idTeacher` like :idTeacher";
+        $binds=array(
+            0=>array(
+                'var'=>$idTeacher,
+                'marker'=>':idTeacher',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result= $this->queryPrepareExecute($query, $binds);
+        return $result;
     }
 
     

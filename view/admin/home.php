@@ -57,7 +57,6 @@
             </thead>
             <tbody><?php
                 foreach($teachers as $teacher){?>
-               
                 <tr>
                     <th><?=$teacher['fkTeacher']?></th>
                     <td class="text-break"><?=$teacher['teaFirstname']?></td>
@@ -67,11 +66,10 @@
                     <td class="text-end"><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] . " CHF" : '-'?></td>
                     <td><?=$teacher['ordPaymentDate'] ? $teacher['ordPaymentDate'] : '-'?></td> 
                     
-                    
                     <td class="text-center">
-                        <a class="btn btn-primary" href="?admin=viewConso&id=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-magnifying-glass"></i></a>
+                        <a class="btn btn-primary" href="?admin=viewConso&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-magnifying-glass"></i></a>
                         <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-plus"></i></a>
-                        <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-pen"></i></a>
+                        <a role="button" class="btn btn-secondary" href="?admin=editOrderForm&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-pen"></i></a>
                     </td>
      
                 </tr><?php
@@ -86,7 +84,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <!-- <th>ID</th> -->
                     <th>Prénom</th>
                     <th>Nom</th>
                     <th></th>  
@@ -95,13 +93,15 @@
             <tbody><?php 
             foreach($teachers as $teacher){?>
                 <tr>
-                    <th><?=$teacher['fkTeacher']?></th>
+                    <!-- <th><?=$teacher['fkTeacher']?></th> -->
                     <td class="text-break"><?=$teacher['teaFirstname']?></td>
                     <td class="text-break"><?=$teacher['teaLastname']?></td>
                     <td class="text-center ">
-                    <a class="btn btn-primary" href="?admin=viewConso&id=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-magnifying-glass fa-sm"></i></a>
-                    <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-plus fa-sm"></i></a>
-                    <a role="button" class="btn btn-secondary" href="?admin=editOrderForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-pen fa-sm"></i></a>
+                        <div class="btn-group"> 
+                            <a class="btn btn-secondary" href="?admin=viewConso&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-magnifying-glass fa-sm"></i></a>
+                            <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-plus fa-sm"></i></a>
+                            <a role="button" class="btn btn-secondary" href="?admin=editOrderForm&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-pen fa-sm"></i></a>
+                        </div>
                     </td> 
                 </tr>  
                 <!-- //not working -->

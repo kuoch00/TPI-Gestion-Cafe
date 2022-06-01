@@ -84,11 +84,7 @@
                     if($conn->hasOrdered($_SESSION['user'][0]['idTeacher'])){
                         header('Location: ?coffee=view');
                     }
-                    else{
-                        //récupère dernière consommation de café
-                        // print_r();
-                        // die();
-                        // $id = $_SESSION['user'][0]['idTeacher'];
+                    else{ 
                         $lastConso = $conn->getLastConso($years, $_SESSION['user'][0]['idTeacher']);
 
                         //tableau de tous les lieux
@@ -180,15 +176,28 @@
                         } 
                         break; 
                     case 'viewConso':
-                        if(isset($_GET['id'])&&$_GET['id']){
+                        if(isset($_GET['idOrder'])&&$_GET['idOrder']){ 
                             $years = $conn->calcCurrentSchoolYear(date('m'));
-                            $teacherOrder = $conn->getTeacherOrder($_GET['id']);
-                            
+                            $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher']);
+                            $consoList = $conn->getConsoOrder($_GET['idOrder']);
                             include('view/admin/teacherOrder.php');
                         }
                         break;
                     case 'editOrderForm': 
-                        include ('view/admin/editOrder.php');
+                        if(isset($_GET['idOrder']) && $_GET['idOrder']){
+                            $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher']);
+                            $consoList = $conn->getConsoOrder($_GET['idOrder']);
+                            include('view/admin/editOrder.php');
+                        } 
+                        break;
+                    case 'editOrder':
+                        if(isset($_GET['idOrder']) && $_GET['idOrder']){
+                            // print_r($_POST);
+                            $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher']);
+                            $consoMachines = $_POST;
+                            $conn->updateOrder($_GET['idOrder'],$_GET['idTeacher'] , $consoMachines);
+                            header('Location: ?admin=home');
+                        }
                         break;
                     default :
                         header('Location: ?admin=home');
