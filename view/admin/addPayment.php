@@ -6,7 +6,7 @@
 </a>
     <h3 class="mt-4">Ajout du montant recu</h3>
     <div class="d-flex col-lg-6">
-    <form action="?admin=updatePayment&id=<?=$order[0]['idOrder']?>" method="POST">
+    <form action="?admin=updatePayment&idOrder=<?=$order[0]['idOrder']?>" method="POST">
         <div class="row">
             <h4 class="mt-4"><?=$order[0]['teaFirstname'] . " " . $order[0]['teaLastname']?></h4>
             

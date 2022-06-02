@@ -36,7 +36,7 @@
         </tbody>
     </table>    
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn btn-primary" type="submit"">Modifier</button>
+        <button class="btn btn-primary" type="submit" onclick="confirmUpdate()">Modifier</button>
     </div>
 </form>
 </div>

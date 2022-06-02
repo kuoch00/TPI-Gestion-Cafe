@@ -68,7 +68,7 @@
                     
                     <td class="text-center">
                         <a role="button" class="btn btn-primary" href="?admin=viewConso&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Détails"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Ajouter/modifier un paiement"><i class="fa-solid fa-plus"></i></a>
+                        <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&idOrder=<?=$teacher['idOrder']?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Ajouter/modifier un paiement"><i class="fa-solid fa-plus"></i></a>
                         <a role="button" class="btn btn-secondary" href="?admin=editOrderForm&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier la commande"><i class="fa-solid fa-pen"></i></a>
                     </td>
                 </tr><?php
@@ -96,7 +96,7 @@
                     <td class="text-center ">
                         <div class="btn-group"> 
                             <a class="btn btn-secondary" href="?admin=viewConso&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-magnifying-glass fa-sm"></i></a>
-                            <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-plus fa-sm"></i></a>
+                            <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&idOrder=<?=$teacher['idOrder']?>"><i class="fa-solid fa-plus fa-sm"></i></a>
                             <a role="button" class="btn btn-secondary" href="?admin=editOrderForm&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-pen fa-sm"></i></a>
                         </div>
                     </td> 

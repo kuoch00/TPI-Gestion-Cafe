@@ -160,16 +160,16 @@
                         header('Location: ?admin=home');
                         break;
                     case 'updatePaymentForm':
-                        if(isset($_GET['id']) && $_GET['id']){
-                            $idOrder = $_GET['id']; 
+                        if(isset($_GET['idOrder']) && $_GET['idOrder']){
+                            $idOrder = $_GET['idOrder']; 
                             $order = $conn->getOrder($idOrder);
                             $date = date('Y-m-d');
                             include('view/admin/addPayment.php');
                         }
                         break;
                     case 'updatePayment':
-                        if(isset($_GET['id']) && $_GET['id']){
-                            $idOrder = $_GET['id']; 
+                        if(isset($_GET['idOrder']) && $_GET['idOrder']){
+                            $idOrder = $_GET['idOrder']; 
                             $conn->addPayment($idOrder, $_POST['amount'], $_POST['paymentDate']);
                             header('Location: ?admin=home');
                         } 

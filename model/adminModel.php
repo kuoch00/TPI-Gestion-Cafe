@@ -55,18 +55,18 @@ class AdminModel extends MainModel
     /**
      * récupère les données d'une commande
      *
-     * @param [int] $id
+     * @param [int] $idOrder
      * @return array
      */
     public function getOrder($idOrder)
     {
         $query="SELECT `idOrder`,`ordTotal`,ordDate ,`fkTeacher`,t_teacher.teaFirstname, t_teacher.teaLastname FROM `t_order`
         INNER JOIN t_teacher ON t_teacher.idTeacher = t_order.fkTeacher
-        WHERE `idOrder`=:id";
+        WHERE `idOrder`=:idOrder";
         $binds=array(
             0=>array(
                 'var'=>$idOrder,
-                'marker'=>':id',
+                'marker'=>':idOrder',
                 'type'=>PDO::PARAM_STR   
             )
         );

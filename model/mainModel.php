@@ -135,16 +135,16 @@ class MainModel
     /**
      * recherche les données de l'utilisateur/enseignant
      *
-     * @param [string] $id
+     * @param [string] $idTeacher
      * @return array
      */
-    private function getTeacher($id)
+    private function getTeacher($idTeacher)
     {
-        $query = "SELECT idTeacher, teaFirstname, teaLastname, teaIsAdmin, teaNbWeek FROM t_teacher WHERE idTeacher like :id";
+        $query = "SELECT idTeacher, teaFirstname, teaLastname, teaIsAdmin, teaNbWeek FROM t_teacher WHERE idTeacher like :idTeacher";
         $binds = array(
             0=>array(
-                'var' => $id,
-                'marker'=> ':id',
+                'var' => $idTeacher,
+                'marker'=> ':idTeacher',
                 'type'=> PDO::PARAM_STR
             )
         );
@@ -246,10 +246,10 @@ class MainModel
      * ajoute la commande de la consommation de café dans la base de données
      *
      * @param [string] $total
-     * @param [int] $id
+     * @param [int] $idTeacher
      * @return void
      */
-    private function addOrder($total, $id)
+    private function addOrder($total, $idTeacher)
     { 
         $query = "INSERT INTO t_order SET ordDate=:ordDate, ordTotal=:ordTotal, fkTeacher=:idTeacher";
         $binds=array(
@@ -264,7 +264,7 @@ class MainModel
                 'type'=>PDO::PARAM_STR
             ),
             2=>array(
-                'var'=>$id,
+                'var'=>$idTeacher,
                 'marker'=>':idTeacher',
                 'type'=>PDO::PARAM_STR
             )
@@ -384,10 +384,10 @@ class MainModel
     /**
      * calcul si l'utilisateur a déja commandé sur l'année scolaire en cours
      *
-     * @param [int] $id
+     * @param [int] $idTeacher
      * @return boolean
      */
-    public function hasOrdered($id)
+    public function hasOrdered($idTeacher)
     {
         $currentMonth = date('m');
         //si date actuelle avant aout (commande en fin d'année scolaire...)
@@ -400,11 +400,11 @@ class MainModel
             $date2 = date('Y')+1 . "-07-31"; 
         }
 
-        $query = "SELECT `idOrder` FROM `t_order` WHERE `fkTeacher` LIKE :id AND `ordDate` BETWEEN :date1 AND :date2 ";
+        $query = "SELECT `idOrder` FROM `t_order` WHERE `fkTeacher` LIKE :idTeacher AND `ordDate` BETWEEN :date1 AND :date2 ";
         $binds=array(
             0=>array(
-                'var'=> $id,
-                'marker'=>':id',
+                'var'=> $idTeacher,
+                'marker'=>':idTeacher',
                 'type'=>PDO::PARAM_STR
             ),
             1=>array(
