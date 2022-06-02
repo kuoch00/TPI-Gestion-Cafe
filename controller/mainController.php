@@ -2,7 +2,7 @@
 /**
  * auteur : Elisa Kuoch
  * date de création : 18.05.2022
- * description : controlleur de l'application
+ * description : controlleur principal
  */
     ob_start();
 
@@ -205,7 +205,7 @@
             }
             else{//utilisateur != admin
                 echo "Vous n'êtes pas autorisé à consulter cette page.";
-                echo '<br><a href="?login" role="button" class="btn btn-primary">Retour</a>';
+                echo '<br><a href="?login" role="button" class="btn btn-primary mt-1">Retour</a>';
             }
         }
         else{//utilisateur pas connecté

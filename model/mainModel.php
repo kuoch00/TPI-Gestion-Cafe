@@ -1,6 +1,8 @@
 <?php
 /**
- * Model principal
+ * auteur :  Elisa Kuoch
+ * date : 20.05.2022
+ * description : Model principal
  */
 class MainModel
 {
@@ -168,7 +170,7 @@ class MainModel
     /**
      * récupère toutes les machines d'un lieu
      *
-     * @param [string] $idLocation
+     * @param [int] $idLocation
      * @return array
      */
     public function getAllMachinesFromLocation($idLocation)
@@ -269,8 +271,7 @@ class MainModel
                 'type'=>PDO::PARAM_STR
             )
         );
-        $result = $this->queryPrepareExecute($query, $binds); 
-        return $result;
+        $this->queryPrepareExecute($query, $binds);  
     }
 
     /**
@@ -293,11 +294,11 @@ class MainModel
             }
             foreach($listMachines as $machine){
                 if($machine['idMachine'] == $idMachine){ 
-                    $addInclude = $this->addInclude($idMachine, $idOrder[0]['idOrder'], $nbCafe, $machine['macCoffeePrice']);
+                    $this->addInclude($idMachine, $idOrder[0]['idOrder'], $nbCafe, $machine['macCoffeePrice']);
                 }
             } 
         }
-        return true;
+        
     }
 
     /**
@@ -330,8 +331,7 @@ class MainModel
      * @return void
      */
     protected function addInclude($idMachine, $idOrder, $coffeeQuantity, $coffeePrice)
-    { 
-        
+    {  
         $query="INSERT INTO t_include SET fkMachine=:idMachine, fkOrder=:idOrder, incCoffeeQuantity=:coffeeQuantity, incCoffeePrice=:coffeePrice";
         $binds=array(
             0=>array(
@@ -355,10 +355,8 @@ class MainModel
                 'type'=>PDO::PARAM_STR 
             )
         );
-        $result = $this->queryPrepareExecute($query, $binds);
+        $this->queryPrepareExecute($query, $binds);
         
-        
-        return $result;
     }
 
     /**
@@ -427,7 +425,7 @@ class MainModel
      * calcul de l'année scolaire en cours
      *
      * @param [int] $currentMonth
-     * @return void
+     * @return array
      */
     public function calcCurrentSchoolYear($currentMonth)
     {

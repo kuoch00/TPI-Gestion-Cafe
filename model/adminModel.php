@@ -1,5 +1,10 @@
 <?php
-//TODO : Dates de query à modifier !!
+/**
+ * auteur :  Elisa Kuoch
+ * date : 20.05.2022
+ * description : Model de l'administrateur
+ */
+
 
 use LDAP\Result;
 

@@ -1,4 +1,10 @@
 <div> 
+    <!-- 
+auteur : Elisa Kuoch
+date : 20.05.2022
+description : page principale d'administration
+
+     -->
     <h3>Espace admin</h3>
     <!-- alerte si commande pas ajoutée ? --> 
     <?php 

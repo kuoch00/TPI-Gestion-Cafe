@@ -1,5 +1,9 @@
-
 <div>
+    <!-- 
+        auteur :  Elisa Kuoch
+        date : 20.05.2022
+        description : Page ajout d'un paiement recu
+     -->
 <a href="?admin=home" role="button">
     <i class="fa-solid fa-arrow-left"></i>
     Retour

@@ -10,8 +10,7 @@
             Retour
         </a><?php
     }
-?>
-
+?> 
 <div class="col">
     <h3 class="mt-4">Ajout de la consommation de café <?=$years['year1'] . '-'. $years['year2']?></h3>
     <div>
@@ -21,7 +20,6 @@
                     <?php
                     foreach ($locations as $location) {
                         if(!empty($machines[$location['idLocation']])){ //affiche pas si aucune machine dans le lieu ?>  
-                        
                         <h4 class="mt-4"><?=$location['locName']?></h4>
                         <table class="table table-hover"> 
                             <thead>

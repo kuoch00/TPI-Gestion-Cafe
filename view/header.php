@@ -2,14 +2,8 @@
     <!-- <img src="resources/img/header.png"  alt="" style="height: 60px; width:auto;"> -->
     <div class=" position-absolute ms-3 mt-2">
         <a class="title" href="?login">GestCafés  <i class="fa-solid fa-mug-saucer"></i></a>
-        <p>
-        
-        </p>
-        
-    </div>
-    
+    </div> 
 </div>
-
 <?php
     if(isset($_SESSION['user']) && isset($_SESSION['connected'])){?>
         <div class="d-grid gap-2 d-flex justify-content-end me-3">
