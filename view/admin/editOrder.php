@@ -14,19 +14,25 @@
                 <th>Modification</th>
             </tr>
         </thead>
-        <tbody>
-        <?php
-
-        foreach($consoList as $conso){?>
-            <tr>
-                <th><?=$conso['macName']?></th>
-                <td><?=$conso['incCoffeeQuantity']?></td>
-                <td><input value="0" onfocus="this.value=''" name="<?=$conso['fkMachine']?>" class="form-control" type="number" min = 0 max = 99></td>
-            </tr>
-        <?php
-        }
-        ?>
-            
+        <tbody><?php
+            foreach($machines as $machine){?>
+                <tr>
+                    <th><?=$machine['macName']?></th><?php
+                    $entered= false;
+                foreach($consoList as $conso){
+                    if($machine['macName'] == $conso['macName']){?>
+                        <td><?=$conso['incCoffeeQuantity']?></td><?php 
+                        $entered = true;
+                        break;
+                    }
+                }
+                if(!$entered){//affiche 0 si pas trouvé dans consoList?>
+                    <td>0</td><?php 
+                }
+                ?>
+                <td><input value="<?=$conso['incCoffeeQuantity'] ? $conso['incCoffeeQuantity'] : 0?>" onfocus="this.value=''" name="<?=$machine['idMachine']?>" class="form-control" type="number" min = 0 max = 99></td>
+                </tr><?php
+            }?> 
         </tbody>
     </table>    
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">

@@ -155,15 +155,14 @@
                         $types = $conn->getAllTypes();
                         include('view/admin/editCoffeePrice.php');
                         break;
-                    case 'updateCoffeePrice' : 
-                        // die();
+                    case 'updateCoffeePrice' :
                         $conn->updateCoffeePrices($_POST);
                         header('Location: ?admin=home');
                         break;
                     case 'updatePaymentForm':
                         if(isset($_GET['id']) && $_GET['id']){
-                            $id = $_GET['id']; 
-                            $order = $conn->getOrder($id);
+                            $idOrder = $_GET['id']; 
+                            $order = $conn->getOrder($idOrder);
                             $date = date('Y-m-d');
                             include('view/admin/addPayment.php');
                         }
@@ -185,6 +184,7 @@
                         break;
                     case 'editOrderForm': 
                         if(isset($_GET['idOrder']) && $_GET['idOrder']){
+                            $machines = $conn->getMachines();
                             $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher']);
                             $consoList = $conn->getConsoOrder($_GET['idOrder']);
                             include('view/admin/editOrder.php');
@@ -192,7 +192,6 @@
                         break;
                     case 'editOrder':
                         if(isset($_GET['idOrder']) && $_GET['idOrder']){
-                            // print_r($_POST);
                             $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher']);
                             $consoMachines = $_POST;
                             $conn->updateOrder($_GET['idOrder'],$_GET['idTeacher'] , $consoMachines);

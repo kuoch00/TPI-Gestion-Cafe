@@ -58,14 +58,14 @@ class AdminModel extends MainModel
      * @param [int] $id
      * @return array
      */
-    public function getOrder($id)
+    public function getOrder($idOrder)
     {
         $query="SELECT `idOrder`,`ordTotal`,ordDate ,`fkTeacher`,t_teacher.teaFirstname, t_teacher.teaLastname FROM `t_order`
         INNER JOIN t_teacher ON t_teacher.idTeacher = t_order.fkTeacher
         WHERE `idOrder`=:id";
         $binds=array(
             0=>array(
-                'var'=>$id,
+                'var'=>$idOrder,
                 'marker'=>':id',
                 'type'=>PDO::PARAM_STR   
             )
@@ -125,13 +125,13 @@ class AdminModel extends MainModel
      * @param [string] $type
      * @return void
      */
-    private function getTypeId($type)
+    private function getTypeId($typeName)
     {
-        $query="SELECT idTypeMachine FROM t_typemachine WHERE typName=:type";
+        $query="SELECT idTypeMachine FROM t_typemachine WHERE typName=:typeName";
         $binds=array(
             0=>array(
-                'var'=>$type,
-                'marker'=>':type',
+                'var'=>$typeName,
+                'marker'=>':typeName',
                 'type'=>PDO::PARAM_STR 
             )
         );
@@ -143,22 +143,22 @@ class AdminModel extends MainModel
     /**
      * ajout nouveau type de machine à café
      *
-     * @param [string] $name
-     * @param [type] $price
+     * @param [string] $typName
+     * @param [type] $coffeePrice
      * @return void
      */
-    private function addType($name, $price)
+    private function addType($typName, $coffeePrice)
     {
-        $query="INSERT INTO t_typemachine SET typCoffeePrice=:price, typName=:name";
+        $query="INSERT INTO t_typemachine SET typCoffeePrice=:coffeePrice, typName=:typName";
         $binds=array(
             0=>array(
-                'var'=>$price,
-                'marker'=>':price',
+                'var'=>$coffeePrice,
+                'marker'=>':coffeePrice',
                 'type'=>PDO::PARAM_STR
             ),
             1=>array(
-                'var'=>$name,
-                'marker'=>':name',
+                'var'=>$typName,
+                'marker'=>':typName',
                 'type'=>PDO::PARAM_STR
             )
         );
@@ -201,45 +201,44 @@ class AdminModel extends MainModel
     /**
      * Met a jour le prix des cafés
      *
-     * @param [type] $prices
+     * @param [array] $coffeePrices
      * @return void
      */
-    public function updateCoffeePrices($prices)
+    public function updateCoffeePrices($coffeePrices)
     {
-        foreach ($prices as $id=>$price){
-            $query = "UPDATE t_typemachine SET typCoffeePrice = :price WHERE t_typemachine.idTypeMachine = :id ";
+        foreach ($coffeePrices as $idType=>$coffeePrice){
+            $query = "UPDATE t_typemachine SET typCoffeePrice = :coffeePrice WHERE t_typemachine.idTypeMachine = :idType ";
             $binds=array(
                 0=>array(
-                    'var'=> $id,
-                    'marker'=>':id',
+                    'var'=> $idType,
+                    'marker'=>':idType',
                     'type'=>PDO::PARAM_STR
                 ),
                 1=>array(
-                    'var'=>$price,
-                    'marker'=>':price',
+                    'var'=>$coffeePrice,
+                    'marker'=>':coffeePrice',
                     'type'=>PDO::PARAM_STR
                 )
             );
-            $result = $this->queryPrepareExecute($query, $binds); 
+            $this->queryPrepareExecute($query, $binds); 
         }
-       
     }
 
     /**
      * ajout du paiement dans la base de données
      *
-     * @param [int] $id
+     * @param [int] $idOrder
      * @param [decimal] $amount
      * @param [date] $date
      * @return void
      */
-    public function addPayment($id, $amount, $date)
+    public function addPayment($idOrder, $amount, $date)
     {
-        $query="UPDATE `t_order` SET `ordPaymentDate` = :date , `ordTotalPaid` = :amount WHERE `t_order`.`idOrder` = :id";
+        $query="UPDATE `t_order` SET `ordPaymentDate` = :date , `ordTotalPaid` = :amount WHERE `t_order`.`idOrder` = :idOrder";
         $binds=array(
             0=>array(
-                'var'=>$id,
-                'marker'=>':id',
+                'var'=>$idOrder,
+                'marker'=>':idOrder',
                 'type'=>PDO::PARAM_STR
             ),
             1=>array(
@@ -256,6 +255,12 @@ class AdminModel extends MainModel
         $this->queryPrepareExecute($query, $binds); 
     }
 
+    /**
+     * récupère la commande d'un enseignant
+     *
+     * @param [int] $idTeacher
+     * @return array
+     */
     public function getTeacherOrder($idTeacher)
     {
         $years = $this->calcCurrentSchoolYear(date('m'));
@@ -264,7 +269,7 @@ class AdminModel extends MainModel
 
         $query="SELECT fkTeacher, t_teacher.teaFirstname, t_teacher.teaLastname, ordTotal, ordTotalPaid, ordPaymentDate, idOrder FROM t_order
         INNER JOIN t_teacher on t_teacher.idTeacher = t_order.fkTeacher
-        WHERE fkTeacher LIKE :id AND ordDate BETWEEN :date1 AND :date2";
+        WHERE fkTeacher LIKE :idTeacher AND ordDate BETWEEN :date1 AND :date2";
 
         $binds=array(
             0=>array(
@@ -279,7 +284,7 @@ class AdminModel extends MainModel
             ),
             2=>array(
                 'var'=>$idTeacher,
-                'marker'=>':id',
+                'marker'=>':idTeacher',
                 'type'=>PDO::PARAM_STR
             )
         );
@@ -297,12 +302,12 @@ class AdminModel extends MainModel
      */
     public function getConsoOrder($idOrder)
     {
-        $query="SELECT `fkMachine`, t_machine.macName,`incCoffeeQuantity` FROM `t_include` INNER JOIN t_machine On t_machine.idMachine = fkMachine WHERE `fkOrder` LIKE :id ";
+        $query="SELECT `fkMachine`, t_machine.macName,`incCoffeeQuantity` FROM `t_include` INNER JOIN t_machine On t_machine.idMachine = fkMachine WHERE `fkOrder` LIKE :idOrder ";
         
         $binds=array(
             0=>array(
                 'var'=>$idOrder,
-                'marker'=>':id',
+                'marker'=>':idOrder',
                 'type'=>PDO::PARAM_STR
             )
         );
@@ -311,23 +316,60 @@ class AdminModel extends MainModel
     }
 
     /**
-     * met a jour la commande avec les nouvelles quantités et le nouveau montant
+     * met à jour la commande avec les nouvelles quantités et le nouveau montant
      *
-     * @param [type] $idOrder
-     * @param [type] $idMachine
-     * @param [type] $coffeeQuantity
+     * @param [int] $idOrder
+     * @param [int] $idMachine
+     * @param [int] $coffeeQuantity
      * @return void
      */
     public function updateOrder($idOrder, $idTeacher, $consoMachines)
     {
         $total = 0;
-        //$machines = $this->getMachines();
-        //update in t_include
+        
         foreach($consoMachines as $idMachine=>$coffeeQuantity){
             if($coffeeQuantity==""){
                 $coffeeQuantity=0;
             }
-            $query="UPDATE `t_include` SET `incCoffeeQuantity` = :coffeeQuantity WHERE `t_include`.`fkMachine` = :idMachine AND `t_include`.`fkOrder` = :idOrder; ";
+            //check if exist in t_include
+            
+            $check = $this->existsInclude($idOrder, $idMachine);
+            
+            if($check){
+                $this->updateInclude($idOrder, $idMachine, $coffeeQuantity);
+                //récupère le prix du café au moment de la commande
+                $coffeePrice = $this->getOrderCoffeePrice($idOrder, $idMachine);
+            }
+            else{
+                //recupère le prix du café de la machine (actuel)
+                $coffeePrice = $this->getOneCoffeePrice($idMachine);
+                //ajoute dans t_include
+                $this->addInclude($idMachine, $idOrder, $coffeeQuantity, $coffeePrice[0]['typCoffeePrice']);
+            } 
+            $total += $coffeeQuantity * $coffeePrice[0]['incCoffeePrice']; 
+        }//fin foreach
+
+        //récupère le nombre de semaines de l'enseignant
+        $nbWeek = $this->getTeacherNbWeek($idTeacher);
+        //calcul du montant (montant café de la semaine * nombre de semaines de travail)
+        $total = $total*$nbWeek[0]['teaNbWeek'];
+
+        //met a jour le montant de la commande
+        $this->updateOrderTotal($total, $idOrder);
+
+    }
+
+    /**
+     * met a jour la table t_include
+     *
+     * @param [type] $idOrder
+     * @param [type] $idMachine
+     * @param [type] $coffeeQuantity
+     * @return array
+     */
+    private function updateInclude($idOrder, $idMachine, $coffeeQuantity)
+    {
+        $query="UPDATE `t_include` SET `incCoffeeQuantity` = :coffeeQuantity WHERE `t_include`.`fkMachine` = :idMachine AND `t_include`.`fkOrder` = :idOrder; ";
             $binds=array(
                 0=>array(
                     'var'=>$idOrder,
@@ -345,27 +387,7 @@ class AdminModel extends MainModel
                     'type'=>PDO::PARAM_STR
                 )
             );
-            $this->queryPrepareExecute($query, $binds); 
-
-
-            $coffeePrice = $this->getOrderCoffeePrice($idOrder, $idMachine);
-            $total += $coffeeQuantity * $coffeePrice[0]['incCoffeePrice'];
-            // echo $total;
-        }
-
-        //get teacher and nb week
-        $nbWeek = $this->getTeacherNbWeek($idTeacher);
-        //calc total
-        $total = $total*$nbWeek[0]['teaNbWeek'];
-        // die($total);
-        
-
-        //update order now
-            //calc new total puis update
-            $this->updateOrderTotal($total, $idOrder);
-
-            
-            
+        $this->queryPrepareExecute($query, $binds); 
         
     }
 
@@ -434,7 +456,51 @@ class AdminModel extends MainModel
         return $result;
     }
 
+    /**
+     * récupère le prix du café d'une machine à café
+     *
+     * @param [int] $idMachine
+     * @return array
+     */
+    private function getOneCoffeePrice($idMachine)
+    {
+        $query="SELECT `typCoffeePrice` FROM `t_typemachine` INNER JOIN t_machine ON t_machine.fkTypeMachine = `idTypeMachine` WHERE t_machine.idMachine LIKE :idMachine ";
+        $binds=array(
+            0=>array(
+                'var'=>$idMachine,
+                'marker'=>':idMachine',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result= $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
     
+    /**
+     * verifie si un enregistrement existe avec les memes id
+     *
+     * @param [int] $idOrder
+     * @param [int] $idMachine
+     * @return array
+     */
+    private function existsInclude($idOrder, $idMachine)
+    {
+        $query="SELECT `fkOrder` FROM `t_include` WHERE `fkOrder` LIKE :idOrder and `fkMachine` LIKE :idMachine ";
+        $binds=array(
+            0=>array(
+                'var'=>$idOrder,
+                'marker'=>':idOrder',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=>$idMachine,
+                'marker'=>':idMachine',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result= $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
 }
 
 

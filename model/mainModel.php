@@ -329,8 +329,9 @@ class MainModel
      * @param [string] $coffeePrice
      * @return void
      */
-    private function addInclude($idMachine, $idOrder, $coffeeQuantity, $coffeePrice)
+    protected function addInclude($idMachine, $idOrder, $coffeeQuantity, $coffeePrice)
     { 
+        
         $query="INSERT INTO t_include SET fkMachine=:idMachine, fkOrder=:idOrder, incCoffeeQuantity=:coffeeQuantity, incCoffeePrice=:coffeePrice";
         $binds=array(
             0=>array(
@@ -355,6 +356,8 @@ class MainModel
             )
         );
         $result = $this->queryPrepareExecute($query, $binds);
+        
+        
         return $result;
     }
 

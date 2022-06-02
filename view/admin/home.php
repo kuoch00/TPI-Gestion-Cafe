@@ -1,5 +1,5 @@
 <div> 
-    <h3>Admin</h3>
+    <h3>Espace admin</h3>
     <!-- alerte si commande pas ajoutée ? --> 
     <?php 
         if(isset($hasOrdered) && $hasOrdered){?>
@@ -59,19 +59,18 @@
                 foreach($teachers as $teacher){?>
                 <tr>
                     <th><?=$teacher['fkTeacher']?></th>
-                    <td class="text-break"><?=$teacher['teaFirstname']?></td>
-                    <td class="text-break"><?=$teacher['teaLastname']?></td>
+                    <td><?=$teacher['teaFirstname']?></td>
+                    <td><?=$teacher['teaLastname']?></td>
                     
                     <td class="text-end"><?=$teacher['ordTotal']?> CHF</td>
                     <td class="text-end"><?=$teacher['ordTotalPaid'] ? $teacher['ordTotalPaid'] . " CHF" : '-'?></td>
                     <td><?=$teacher['ordPaymentDate'] ? $teacher['ordPaymentDate'] : '-'?></td> 
                     
                     <td class="text-center">
-                        <a class="btn btn-primary" href="?admin=viewConso&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>"><i class="fa-solid fa-plus"></i></a>
-                        <a role="button" class="btn btn-secondary" href="?admin=editOrderForm&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-pen"></i></a>
+                        <a role="button" class="btn btn-primary" href="?admin=viewConso&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Détails"><i class="fa-solid fa-magnifying-glass"></i></a>
+                        <a role="button" class="btn btn-secondary" href="?admin=updatePaymentForm&id=<?=$teacher['idOrder']?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Ajouter/modifier un paiement"><i class="fa-solid fa-plus"></i></a>
+                        <a role="button" class="btn btn-secondary" href="?admin=editOrderForm&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier la commande"><i class="fa-solid fa-pen"></i></a>
                     </td>
-     
                 </tr><?php
                 }?> 
 
@@ -84,8 +83,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <!-- <th>ID</th> -->
-                    <th>Prénom</th>
+                    <th>ID</th>
                     <th>Nom</th>
                     <th></th>  
                 </tr>
@@ -93,9 +91,8 @@
             <tbody><?php 
             foreach($teachers as $teacher){?>
                 <tr>
-                    <!-- <th><?=$teacher['fkTeacher']?></th> -->
-                    <td class="text-break"><?=$teacher['teaFirstname']?></td>
-                    <td class="text-break"><?=$teacher['teaLastname']?></td>
+                    <th><?=$teacher['fkTeacher']?></th> 
+                    <td><?=$teacher['teaFirstname'] . ' ' . $teacher['teaLastname']?></td>
                     <td class="text-center ">
                         <div class="btn-group"> 
                             <a class="btn btn-secondary" href="?admin=viewConso&idOrder=<?=$teacher['idOrder']?>&idTeacher=<?=$teacher['fkTeacher']?>"><i class="fa-solid fa-magnifying-glass fa-sm"></i></a>

@@ -52,7 +52,7 @@
                                         } 
                                     }
                                     if(!$entered){//si aucune information: afficher 0?>
-                                        <td>0</td> <?php
+                                        <td>Aucune donnée</td> <?php
                                     }
                                     ?> 
                                 </tr> 
