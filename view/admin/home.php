@@ -29,7 +29,7 @@
                 foreach($machines as $machine){?>
                     <tr>
                         <th><?=$machine['idMachine']?></th>
-                        <td class="text-break"><?=$machine['macName']?></td>
+                        <td><?=$machine['macName']?></td>
                         <td><?=$machine['macType']?></td>
                         <td><?=$machine['macLocation']?></td>
                         <td class="text-end"><?=$machine['macCoffeePrice']?> CHF</td>

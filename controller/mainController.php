@@ -169,8 +169,8 @@
                         break;
                     case 'updatePayment':
                         if(isset($_GET['id']) && $_GET['id']){
-                            $id = $_GET['id']; 
-                            $conn->addPayment($id, $_POST['amount'], $_POST['paymentDate']);
+                            $idOrder = $_GET['id']; 
+                            $conn->addPayment($idOrder, $_POST['amount'], $_POST['paymentDate']);
                             header('Location: ?admin=home');
                         } 
                         break; 

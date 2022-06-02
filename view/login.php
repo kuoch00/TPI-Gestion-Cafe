@@ -2,11 +2,10 @@
     auteur : Elisa Kuoch
     date : 19.05.2022
     description : formulaire de connexion
- -->
-    
+ --> 
     <form action="?login=connect" method="POST">  
-            <div class="d-flex align-items-center justify-content-center ">  
-                <div class="col-xl-5 ">
+            <div class="d-flex justify-content-center ">  
+                <div class="col-xl-5 mt-1">
                     <h3 class="mt-3">Connexion</h3>
                     <div class="row mt-3 ">
                         <div class="col-xl-4 d-flex align-items-center">
