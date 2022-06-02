@@ -2,19 +2,33 @@
     auteur : Elisa Kuoch
     date : 19.05.2022
     description : formulaire de connexion
- -->
- <?php
- if(isset($connectError) && $connectError){?>
-     <p>Nom d'utilisateur ou mot de passe erroné</p><?php
- }
- ?>
-<h3>Connexion</h3>
-<form action="?login=connect" method="POST"> 
-    <label for="username">Nom d'utilisateur</label>
-    <input type="text" name="username" value="<?=isset($username) && $username ? $username : ''?>">
+ --> 
+    <form action="?login=connect" method="POST">  
+            <div class="d-flex justify-content-center ">  
+                <div class="col-xl-5 mt-1">
+                    <h3 class="mt-3">Connexion</h3>
+                    <div class="row mt-3 ">
+                        <div class="col-xl-4 d-flex align-items-center">
+                            <label class="form-label" for="username">Nom d'utilisateur</label>
+                        </div>
+                        <div class="col">
+                            <input class="form-control" type="text" name="username" value="<?=isset($username) && $username ? $username : ''?>">
+                        </div>
+                    </div>
 
-    <label for="password">Mot de passe</label>
-    <input type="password" name="password">
+                    <div class="row mt-3">
+                        <div class="col-xl-4 d-flex align-items-center">
+                            <label class="form-label" for="password">Mot de passe</label>
+                        </div>
+                        <div class="col">
+                            <input class="form-control <?=isset($connectError) && $connectError ? "is-invalid" : ''?>" type="password" name="password">
+                            <div class="invalid-feedback"> Nom d'utilisateur ou mot de passe erroné</div>
+                        </div>
+                    </div>
 
-    <button type="submit">Se connecter</button>
-</form>
+                    <div class="mt-3 text-center">
+                        <button class="btn btn-primary" type="submit">Se connecter</button>
+                    </div> 
+                </div>
+            </div>
+    </form>

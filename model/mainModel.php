@@ -1,6 +1,8 @@
 <?php
 /**
- * Model principal
+ * auteur :  Elisa Kuoch
+ * date : 20.05.2022
+ * description : Model principal
  */
 class MainModel
 {
@@ -135,16 +137,16 @@ class MainModel
     /**
      * recherche les données de l'utilisateur/enseignant
      *
-     * @param [string] $id
+     * @param [string] $idTeacher
      * @return array
      */
-    private function getTeacher($id)
+    private function getTeacher($idTeacher)
     {
-        $query = "SELECT idTeacher, teaFirstname, teaLastname, teaIsAdmin, teaNbWeek FROM t_teacher WHERE idTeacher like :id";
+        $query = "SELECT idTeacher, teaFirstname, teaLastname, teaIsAdmin, teaNbWeek FROM t_teacher WHERE idTeacher like :idTeacher";
         $binds = array(
             0=>array(
-                'var' => $id,
-                'marker'=> ':id',
+                'var' => $idTeacher,
+                'marker'=> ':idTeacher',
                 'type'=> PDO::PARAM_STR
             )
         );
@@ -168,7 +170,7 @@ class MainModel
     /**
      * récupère toutes les machines d'un lieu
      *
-     * @param [string] $idLocation
+     * @param [int] $idLocation
      * @return array
      */
     public function getAllMachinesFromLocation($idLocation)
@@ -246,10 +248,10 @@ class MainModel
      * ajoute la commande de la consommation de café dans la base de données
      *
      * @param [string] $total
-     * @param [int] $id
+     * @param [int] $idTeacher
      * @return void
      */
-    private function addOrder($total, $id)
+    private function addOrder($total, $idTeacher)
     { 
         $query = "INSERT INTO t_order SET ordDate=:ordDate, ordTotal=:ordTotal, fkTeacher=:idTeacher";
         $binds=array(
@@ -264,13 +266,12 @@ class MainModel
                 'type'=>PDO::PARAM_STR
             ),
             2=>array(
-                'var'=>$id,
+                'var'=>$idTeacher,
                 'marker'=>':idTeacher',
                 'type'=>PDO::PARAM_STR
             )
         );
-        $result = $this->queryPrepareExecute($query, $binds); 
-        return $result;
+        $this->queryPrepareExecute($query, $binds);  
     }
 
     /**
@@ -288,15 +289,16 @@ class MainModel
         $listMachines = $this->getMachineCoffeePrices(); 
 
         foreach ($conso as $idMachine => $nbCafe) {  
-            if($nbCafe!="" && $nbCafe!=0){
-                foreach($listMachines as $machine){
-                    if($machine['idMachine'] == $idMachine){ 
-                        $addInclude = $this->addInclude($idMachine, $idOrder[0]['idOrder'], $nbCafe, $machine['macCoffeePrice']);
-                    }
-                } 
+            if($nbCafe!=""){
+                $nbCafe=0;
             }
+            foreach($listMachines as $machine){
+                if($machine['idMachine'] == $idMachine){ 
+                    $this->addInclude($idMachine, $idOrder[0]['idOrder'], $nbCafe, $machine['macCoffeePrice']);
+                }
+            } 
         }
-        return true;
+        
     }
 
     /**
@@ -328,8 +330,8 @@ class MainModel
      * @param [string] $coffeePrice
      * @return void
      */
-    private function addInclude($idMachine, $idOrder, $coffeeQuantity, $coffeePrice)
-    { 
+    protected function addInclude($idMachine, $idOrder, $coffeeQuantity, $coffeePrice)
+    {  
         $query="INSERT INTO t_include SET fkMachine=:idMachine, fkOrder=:idOrder, incCoffeeQuantity=:coffeeQuantity, incCoffeePrice=:coffeePrice";
         $binds=array(
             0=>array(
@@ -353,8 +355,8 @@ class MainModel
                 'type'=>PDO::PARAM_STR 
             )
         );
-        $result = $this->queryPrepareExecute($query, $binds);
-        return $result;
+        $this->queryPrepareExecute($query, $binds);
+        
     }
 
     /**
@@ -380,10 +382,10 @@ class MainModel
     /**
      * calcul si l'utilisateur a déja commandé sur l'année scolaire en cours
      *
-     * @param [int] $id
+     * @param [int] $idTeacher
      * @return boolean
      */
-    public function hasOrdered($id)
+    public function hasOrdered($idTeacher)
     {
         $currentMonth = date('m');
         //si date actuelle avant aout (commande en fin d'année scolaire...)
@@ -396,11 +398,11 @@ class MainModel
             $date2 = date('Y')+1 . "-07-31"; 
         }
 
-        $query = "SELECT `idOrder` FROM `t_order` WHERE `fkTeacher` LIKE :id AND `ordDate` BETWEEN :date1 AND :date2 ";
+        $query = "SELECT `idOrder` FROM `t_order` WHERE `fkTeacher` LIKE :idTeacher AND `ordDate` BETWEEN :date1 AND :date2 ";
         $binds=array(
             0=>array(
-                'var'=> $id,
-                'marker'=>':id',
+                'var'=> $idTeacher,
+                'marker'=>':idTeacher',
                 'type'=>PDO::PARAM_STR
             ),
             1=>array(
@@ -423,7 +425,7 @@ class MainModel
      * calcul de l'année scolaire en cours
      *
      * @param [int] $currentMonth
-     * @return void
+     * @return array
      */
     public function calcCurrentSchoolYear($currentMonth)
     {
@@ -436,7 +438,45 @@ class MainModel
             $year2 = date('Y'); 
         }
         $years = array('year1'=> $year1, 'year2'=>$year2);
+        
         return $years;
+    }
+
+    /**
+     * récupère la dernière consommation de café de l'utilisateur
+     *
+     * @param [array] $years
+     * @return array
+     */
+    public function getLastConso($years, $idTeacher)
+    {
+        $date1 = $years['year1']-1 . "-08-01";
+        $date2 = $years['year2']-1 . "-07-31"; 
+
+        $query="SELECT t_machine.macName, `incCoffeeQuantity`, t_order.ordTotal FROM `t_include` 
+        INNER JOIN t_machine on t_machine.idMachine = t_include.fkMachine
+        INNER JOIN t_order on t_order.idOrder = t_include.fkOrder
+        WHERE t_order.fkTeacher LIKE :idTeacher AND
+        t_order.ordDate BETWEEN :date1 AND :date2";
+        $binds=array(
+            0=>array(
+                'var'=>$date1,
+                'marker'=>':date1',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=>$date2,
+                'marker'=>':date2',
+                'type'=>PDO::PARAM_STR
+            ),
+            2=>array(
+                'var'=>$idTeacher,
+                'marker'=>':idTeacher',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $result=$this->queryPrepareExecute($query,$binds);
+        return $result;
     }
 
 }

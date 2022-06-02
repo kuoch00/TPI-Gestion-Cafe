@@ -1,0 +1,56 @@
+/*
+auteur : Elisa Kuoch
+date : 18.05.2022
+description : feuille de style css
+*/
+:root{
+    --primary-color: #B66E52;
+    --primary-dark-color: #88523c;
+    --secondary-color: #3d271f;
+    --secondary-disabled-color: #3d271f41;
+}
+h1,h2,h3,h4,h5,h6{ 
+    font-family: 'Jost', sans-serif;
+    color: var(--secondary-color); 
+}
+.fa{
+    color: var(--secondary-color);
+}
+.fa-disabled{
+    color: var(--secondary-disabled-color);
+}
+
+.fa:hover{
+    color: var(--primary-color);
+}
+
+.btn-primary{
+    /* color: white; */
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+}
+
+.btn-primary:hover, .btn-primary:active{
+    border-color: var(--primary-dark-color);
+    background-color: var(--primary-dark-color);
+}
+
+a{
+    color: var(--primary-color);
+}
+
+a:hover{
+    color: var(--primary-dark-color); 
+}
+
+.title, .title:hover{
+    height: 60px;
+    color: white;
+    font-size: 2rem;
+    text-decoration: none;
+    font-family: 'Jost', sans-serif;
+}
+.header{
+    height: 60px;
+    background-image: url('../img/header.png');
+}

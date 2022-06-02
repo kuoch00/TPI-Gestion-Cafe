@@ -1,17 +1,16 @@
 <!-- 
 auteur : Elisa Kuoch
 date de création : 22.03.2022
-description : page liste où tous les projets sont présentés
+description : infos de connexion à la base de données
 -->
 <?php 
 
 //connection à la db
 $login = array(
      "servername" => "localhost",
-     "username" => "root",
-     "password" => "root",
-     "database" => "db_gestioncafe",
-     
+     "username" => "cafeefac",
+     "password" => "D#zl2b020",
+     "database" => "db_cafe",
 );
 
 ?>
