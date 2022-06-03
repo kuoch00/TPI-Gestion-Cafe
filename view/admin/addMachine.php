@@ -21,9 +21,9 @@
                     <label for="type">Type de machine à café</label>
                     </div>
                     <div class="col">
-                    <input class="form-control" type="text" name="type" list="machineTypes">
+                    <input class="form-control" type="text" name="type" list="machineTypes" required>
                     </div>
-                    <datalist id="machineTypes" required>
+                    <datalist id="machineTypes">
                         <?php
                         foreach($machines as $machine){
                             ?>
