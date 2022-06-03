@@ -128,8 +128,8 @@ description : page principale d'administration
             <tfoot >
                 <tr class="border-top border-2 border-dark">
                     <th>Total</th>
-                    <th class="text-center"><?=$total[0]['ordTotal'] ? $total[0]['ordTotal'] : 0?> CHF</th>
-                    <th class="text-center"><?=$total[0]['ordTotalPaid'] ? $total[0]['ordTotalPaid'] : 0?> CHF</th>
+                    <th class="text-center"><?=!empty($total[0]['ordTotal']) ? $total[0]['ordTotal'] : "0"?> CHF</th>
+                    <th class="text-center"><?=!empty($total[0]['ordTotalPaid']) ? $total[0]['ordTotalPaid'] : "0"?> CHF</th>
                     
                 </tr>
                 

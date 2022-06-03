@@ -55,7 +55,7 @@
                     <div class="col"> 
                         <select class="form-select" name="location" id="emplacement" required>
                         
-                        <option value="" selected disabled>Choose</option>
+                        <option value="" selected disabled>Sélectionner une option</option>
                         <?php 
                         
                         foreach($locations as $location){?> 
