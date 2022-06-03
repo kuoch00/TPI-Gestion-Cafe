@@ -6,7 +6,11 @@
  */
 class MainModel
 {
+    /**
+     * Mois où l'année scolaire passe à la suivante
+     */
     public const MONTHCHANGE = '08';
+
     /**
      * constructeur
      */

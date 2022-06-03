@@ -5,8 +5,6 @@
  * description : Model de l'administrateur
  */
 
-use LDAP\Result;
-
 class AdminModel extends MainModel
 {
     /**
