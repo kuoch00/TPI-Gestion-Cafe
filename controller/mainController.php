@@ -11,6 +11,7 @@
     include_once('model/adminModel.php');
     include('view/view.php');
     
+    
     //login
     if(isset($_GET['login'])){ 
         //pas encore connecté :
@@ -76,16 +77,18 @@
     elseif (isset($_GET['coffee'])){ 
         if(isset($_SESSION['user']) && $_SESSION['user']){ //vérifiation si utilisateur est connecté
             $conn = new MainModel();
-            $currentMonth = date('m');
-            $years = $conn->calcCurrentSchoolYear(date('m'));
+            
+            $years = $conn->calcCurrentSchoolYear();
+            $dates = $conn->calcDatesCurrentSchoolYear($years); 
             switch($_GET['coffee']){ 
                 case 'add' : 
                     //verifie si conso deja commandée :
-                    if($conn->hasOrdered($_SESSION['user'][0]['idTeacher'])){
+                    if($conn->hasOrdered($_SESSION['user'][0]['idTeacher'], $dates)){
                         header('Location: ?coffee=view');
                     }
                     else{ 
-                        $lastConso = $conn->getLastConso($years, $_SESSION['user'][0]['idTeacher']);
+                        $lastDates = $conn->calcDatesLastSchoolYear($years);
+                        $lastConso = $conn->getLastConso($_SESSION['user'][0]['idTeacher'], $lastDates);
 
                         //tableau de tous les lieux
                         $locations = $conn->getAllLocations(); 
@@ -136,10 +139,12 @@
                 $conn = new AdminModel();
                 switch($_GET['admin']){
                     case 'home': 
-                        $years = $conn->calcCurrentSchoolYear(date('m'));
-                        $hasOrdered = $conn->hasOrdered($_SESSION['user'][0]['idTeacher']);
+                        $years = $conn->calcCurrentSchoolYear(); 
+                        $dates = $conn->calcDatesCurrentSchoolYear($years);
+                        $hasOrdered = $conn->hasOrdered($_SESSION['user'][0]['idTeacher'], $dates);
                         $machines = $conn->getMachines();
-                        $teachers = $conn->getTeachers();
+                        $teachers = $conn->getTeachers($dates);
+                        $total = $conn->calcTotal($dates);
                         include('view/admin/home.php');
                         break;
                     case 'addMachineForm' :
@@ -176,8 +181,9 @@
                         break; 
                     case 'viewConso':
                         if(isset($_GET['idOrder'])&&$_GET['idOrder']){ 
-                            $years = $conn->calcCurrentSchoolYear(date('m'));
-                            $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher']);
+                            $years = $conn->calcCurrentSchoolYear();
+                            $dates = $conn->calcDatesCurrentSchoolYear($years);
+                            $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher'], $dates);
                             $consoList = $conn->getConsoOrder($_GET['idOrder']);
                             include('view/admin/teacherOrder.php');
                         }
@@ -185,14 +191,16 @@
                     case 'editOrderForm': 
                         if(isset($_GET['idOrder']) && $_GET['idOrder']){
                             $machines = $conn->getMachines();
-                            $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher']);
+                            $years = $conn->calcCurrentSchoolYear();
+                            $dates = $conn->calcDatesCurrentSchoolYear($years);
+                            $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher'], $dates);
                             $consoList = $conn->getConsoOrder($_GET['idOrder']);
                             include('view/admin/editOrder.php');
                         } 
                         break;
                     case 'editOrder':
                         if(isset($_GET['idOrder']) && $_GET['idOrder']){
-                            $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher']);
+                            $teacherOrder = $conn->getTeacherOrder($_GET['idTeacher'], $dates);
                             $consoMachines = $_POST;
                             $conn->updateOrder($_GET['idOrder'],$_GET['idTeacher'] , $consoMachines);
                             header('Location: ?admin=home');
