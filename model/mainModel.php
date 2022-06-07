@@ -7,6 +7,11 @@
 class MainModel
 {
     /**
+     * Mois où l'année scolaire passe à la suivante
+     */
+    public const MONTHCHANGE = '06';
+
+    /**
      * constructeur
      */
     function __construct()
@@ -380,24 +385,16 @@ class MainModel
     }
 
     /**
-     * calcul si l'utilisateur a déja commandé sur l'année scolaire en cours
+     * cherche si l'utilisateur a déja commandé ou pas 
      *
      * @param [int] $idTeacher
+     * @param [array] $years
      * @return boolean
      */
-    public function hasOrdered($idTeacher)
-    {
-        $currentMonth = date('m');
-        //si date actuelle avant aout (commande en fin d'année scolaire...)
-        if($currentMonth<'08'){
-            $date1 = date('Y')-1 . "-08-01";
-            $date2 = date('Y') . "-07-31";
-        }
-        else{//date actuelle = aout et après
-            $date1 = date('Y') . "-08-01";
-            $date2 = date('Y')+1 . "-07-31"; 
-        }
-
+    public function hasOrdered($idTeacher, $dates)
+    { 
+        $date1 = $dates['date1'];
+        $date2 = $dates['date2'];  
         $query = "SELECT `idOrder` FROM `t_order` WHERE `fkTeacher` LIKE :idTeacher AND `ordDate` BETWEEN :date1 AND :date2 ";
         $binds=array(
             0=>array(
@@ -417,8 +414,7 @@ class MainModel
             )
         );
         $result= $this->queryPrepareExecute($query, $binds);
-        return $result;
-        
+        return $result; 
     }
 
     /**
@@ -427,31 +423,60 @@ class MainModel
      * @param [int] $currentMonth
      * @return array
      */
-    public function calcCurrentSchoolYear($currentMonth)
+    public function calcCurrentSchoolYear()
     {
-        if($currentMonth<'08'){
+        $currentMonth = date('m');
+        if($currentMonth < $this::MONTHCHANGE){
             $year1 = date('Y')-1;
             $year2 = date('Y');
         }
-        else{//date actuelle = aout et après
+        else{//mois actuell = juin et après
             $year1 = date('Y');
-            $year2 = date('Y'); 
-        }
-        $years = array('year1'=> $year1, 'year2'=>$year2);
-        
+            $year2 = date('Y')+1; 
+        } 
+        $years = array('year1'=> $year1, 'year2'=>$year2); 
         return $years;
+    }
+
+    /**
+     * calcul des dates de l'année scolaire en cours
+     *
+     * @param [array] $years
+     * @return array
+     */
+    public function calcDatesCurrentSchoolYear($years)
+    {
+        $date1 = $years['year1'] . '-' . $this::MONTHCHANGE . '-01';
+        $date2 = $years['year2'] . '-'. $this::MONTHCHANGE .'-31';
+        $dates = array('date1'=>$date1, 'date2'=>$date2);
+        return $dates;
+    }
+
+    /**
+     * calcul de la date de l'année scolaire précédente
+     *
+     * @param [array] $years
+     * @return array
+     */
+    public function calcDatesLastSchoolYear($years)
+    {
+        
+        $date1 = $years['year1']-1 . '-' . $this::MONTHCHANGE . '-01';
+        $date2 = $years['year2']-1 . '-' . $this::MONTHCHANGE-1 . '-31'; 
+        $dates = array('date1'=>$date1, 'date2'=>$date2);
+        return $dates;
     }
 
     /**
      * récupère la dernière consommation de café de l'utilisateur
      *
-     * @param [array] $years
+     * @param [array] $dates
      * @return array
      */
-    public function getLastConso($years, $idTeacher)
-    {
-        $date1 = $years['year1']-1 . "-08-01";
-        $date2 = $years['year2']-1 . "-07-31"; 
+    public function getLastConso( $idTeacher, $dates)
+    { 
+        $date1 = $dates['date1'];
+        $date2 = $dates['date2']; 
 
         $query="SELECT t_machine.macName, `incCoffeeQuantity`, t_order.ordTotal FROM `t_include` 
         INNER JOIN t_machine on t_machine.idMachine = t_include.fkMachine

@@ -8,8 +8,8 @@ description : infos de connexion à la base de données
 // connection à la db
 $login = array(
      "servername" => "localhost",
-     "username" => "root",
-     "password" => "root",
+     "username" => "cafeefac",
+     "password" => "D#zl2b020",
      "database" => "db_cafe",
 );
 

@@ -28,7 +28,7 @@
                     <label class="form-label" for="montant">Montant reçu : </label>
                 </div>
                 <div class="col">
-                    <input class="form-control" type="number" name="amount" value="<?=$order[0]['ordTotal']?>" min="<?=$order[0]['ordTotal']?>" step=".01" id="" required>
+                    <input class="form-control" type="number" name="amount" value="<?=$order[0]['ordTotal']?>" min="<?=$order[0]['ordTotal']?>" step=".01" id="montant" required>
                 </div>
             </div>
 
@@ -37,7 +37,7 @@
                     <label class="form-label" for="date">Date de paiement</label>
                 </div>
                 <div class="col">
-                    <input class="form-control" type="date" value="<?=$date?>" name="paymentDate" id="paymentDate" min="<?=$order[0]['ordDate']?>" max="<?=$date?>" required>
+                    <input class="form-control" type="date" value="<?=$date?>" name="paymentDate" id="date" min="<?=$order[0]['ordDate']?>" max="<?=$date?>" required>
                 </div>
             </div>
             <div class="row">
