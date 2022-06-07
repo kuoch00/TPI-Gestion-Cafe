@@ -5,9 +5,6 @@
  * description : Model de l'administrateur
  */
 
-
-use LDAP\Result;
-
 class AdminModel extends MainModel
 {
     /**
@@ -25,18 +22,17 @@ class AdminModel extends MainModel
     }
 
     /**
-     * récupère toutes les commandes (avec les noms des enseignants)
+     *  récupère toutes les commandes (avec les noms des enseignants)
      *
+     * @param [array] $dates
      * @return array
      */
-    public function getTeachers()
+    public function getTeachers($dates)
     {
-        $years = $this->calcCurrentSchoolYear(date('m'));
-        // print_r($years);
         
-        $date1 = $years['year1'] . "-08-01";
-        $date2 = $years['year2'] . "-07-31";
-        // die($date1);
+        $date1 = $dates['date1'];
+        $date2 = $dates['date2'];
+        
         $query="SELECT fkTeacher, t_teacher.teaFirstname, t_teacher.teaLastname, ordTotal, ordTotalPaid, ordPaymentDate, idOrder FROM t_order
         INNER JOIN t_teacher on t_teacher.idTeacher = t_order.fkTeacher
         WHERE ordDate BETWEEN :date1 AND :date2";
@@ -119,8 +115,8 @@ class AdminModel extends MainModel
                 'type'=>PDO::PARAM_STR  
             )
         );
-        $result = $this->queryPrepareExecute($query, $binds);
-        return $result;
+        $this->queryPrepareExecute($query, $binds);
+        
         
     }
 
@@ -167,15 +163,14 @@ class AdminModel extends MainModel
                 'type'=>PDO::PARAM_STR
             )
         );
-        $result = $this->queryPrepareExecute($query, $binds);
-        return $result;
+        $this->queryPrepareExecute($query, $binds); 
     }
 
     /**
      * récupère l'id de l'emplacement de la machine a café
      *
-     * @param [type] $locationName
-     * @return void
+     * @param [string] $locationName
+     * @return array
      */
     private function getLocationId($locationName)
     {
@@ -266,11 +261,10 @@ class AdminModel extends MainModel
      * @param [int] $idTeacher
      * @return array
      */
-    public function getTeacherOrder($idTeacher)
+    public function getTeacherOrder($idTeacher, $dates)
     {
-        $years = $this->calcCurrentSchoolYear(date('m'));
-        $date1 = $years['year1'] . "-08-01";
-        $date2 = $years['year2'] . "-07-31";
+        $date1 = $dates['date1'];
+        $date2 = $dates['date2'];
 
         $query="SELECT fkTeacher, t_teacher.teaFirstname, t_teacher.teaLastname, ordTotal, ordTotalPaid, ordPaymentDate, idOrder FROM t_order
         INNER JOIN t_teacher on t_teacher.idTeacher = t_order.fkTeacher
@@ -392,8 +386,7 @@ class AdminModel extends MainModel
                     'type'=>PDO::PARAM_STR
                 )
             );
-        $this->queryPrepareExecute($query, $binds); 
-        
+        $this->queryPrepareExecute($query, $binds);  
     }
 
     /**
@@ -432,21 +425,27 @@ class AdminModel extends MainModel
     private function updateOrderTotal($total, $idOrder)
     {
         $query="UPDATE `t_order` SET `ordTotal` = :total WHERE `t_order`.`idOrder` = :idOrder; ";
-            $binds=array(
-                0=>array(
-                    'var'=>$total,
-                    'marker'=>':total',
-                    'type'=>PDO::PARAM_STR
-                ),
-                1=>array(
-                    'var'=>$idOrder,
-                    'marker'=>':idOrder',
-                    'type'=>PDO::PARAM_STR
-                )
-            );
-            $result= $this->queryPrepareExecute($query, $binds);
+        $binds=array(
+            0=>array(
+                'var'=>$total,
+                'marker'=>':total',
+                'type'=>PDO::PARAM_STR
+            ),
+            1=>array(
+                'var'=>$idOrder,
+                'marker'=>':idOrder',
+                'type'=>PDO::PARAM_STR
+            )
+        );
+        $this->queryPrepareExecute($query, $binds);
     }
 
+    /**
+     * récupère le nombre de semaines de travail de chaque enseignant
+     *
+     * @param [int] $idTeacher
+     * @return array
+     */
     private function getTeacherNbWeek($idTeacher)
     {
         $query="SELECT `teaNbWeek` FROM `t_teacher` WHERE `idTeacher` like :idTeacher";
@@ -504,6 +503,33 @@ class AdminModel extends MainModel
             )
         );
         $result= $this->queryPrepareExecute($query, $binds);
+        return $result;
+    }
+
+    /**
+     * calcul du total des commandes
+     *
+     * @param [array] $dates
+     * @return array
+     */
+    public function calcTotal($dates)
+    {
+        $date1 = $dates['date1'];
+        $date2 = $dates['date2'];
+        $query="SELECT(SELECT SUM(`ordTotal`)) AS 'ordTotal', (SELECT SUM(`ordTotalPaid`) )AS 'ordTotalPaid' FROM `t_order` WHERE `ordDate` BETWEEN :date1 AND :date2";
+        $binds=array(
+            0=>array(
+                'var'=>$date1,
+                'marker'=>':date1',
+                'type'=>PDO::PARAM_STR,
+            ),
+            1=>array(
+                'var'=>$date2,
+                'marker'=>':date2',
+                'type'=>PDO::PARAM_STR,
+            )
+        );
+        $result = $this->queryPrepareExecute($query, $binds);
         return $result;
     }
 }

@@ -26,8 +26,10 @@ else{
             <h4 class="mt-4"><?=$location['locName']?></h4>
             <table class="table table-hover">
                 <thead>
-                    <th class="col-sm-8">Nom de la machine</th>
-                    <th>Cafés par semaine</th>
+                    <tr>
+                        <th class="col-sm-8">Nom de la machine</th>
+                        <th>Cafés par semaine</th>
+                    </tr> 
                 </thead>
                 <tbody>
                     <?php  

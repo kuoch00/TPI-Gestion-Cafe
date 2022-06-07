@@ -12,18 +12,18 @@
                         <label for="nom">Nom de la machine</label>
                     </div>
                     <div class="col">
-                        <input class="form-control" type="text" name="nom" required>
+                        <input class="form-control" type="text" id="nom" name="nom" required>
                     </div>
                 </div>
 
                 <div class="row my-2">
                     <div class="col">
-                    <label for="type">Type de machine à café</label>
+                        <label for="type">Type de machine à café</label>
                     </div>
                     <div class="col">
-                    <input class="form-control" type="text" name="type" list="machineTypes">
+                        <input class="form-control" type="text" id="type" name="type" list="machineTypes" required>
                     </div>
-                    <datalist id="machineTypes" required>
+                    <datalist id="machineTypes">
                         <?php
                         foreach($machines as $machine){
                             ?>
@@ -32,49 +32,38 @@
                         }
                         ?>
                     </datalist>
-                </div>
-
+                </div> 
                 <div class="row my-2"> 
-                    <div class="col">
-                        
-                        <label for="prix">
-                            <div class="row">
-                                <div class="col-4">
-                                    Prix du café
-                                </div>
-                                <div class="col">
-                                    <p class="form-text my-0">ne pas remplir si le type de machine existe !</p>
-                                </div>
-                            
+                    <div class="col"> 
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="prix">Prix du café</label>
                             </div>
-                        </label>
-                        
+                            <div class="col">
+                                <p class="form-text my-0">ne pas remplir si le type de machine existe !</p>
+                            </div> 
+                        </div> 
                     </div>
                     <div class="col">
-                        <input class="form-control" value="0" type="number" name="prix" min="0" max="99.95" step="0.05">
-                    </div>
-                    
-                </div>
-
+                        <input class="form-control" value="0" type="number" id="prix" name="prix" min="0" max="99.95" step="0.05">
+                    </div> 
+                </div> 
                 <div class="row my-2">
                     <div class="col">
                         <label for="emplacement">Emplacement</label>
-                    </div>
-                    <!-- <input type="text" name="emplacement" list="machineLocations"> -->
+                    </div> 
                     <div class="col"> 
-                    <select class="form-select" name="location" id="machineLocations" required><?php 
-                    foreach($locations as $location){?> 
-                        <option value="<?=$location['locName']?>"><?=$location['locName']?></option><?php
-                    }?>
-                    </select> 
+                        <select class="form-select" name="location" id="emplacement" required>
+                        
+                        <option value="" selected disabled>Sélectionner une option</option>
+                        <?php 
+                        
+                        foreach($locations as $location){?> 
+                            <option value="<?=$location['locName']?>"><?=$location['locName']?></option><?php
+                        }?>
+                        </select> 
                     </div> 
-                </div>
-
-                <!-- <div class="row my-2">
-                    <div class="col">
-                        <button class="btn btn-primary" type="submit">Ajouter</button> 
-                    </div> 
-                </div> -->
+                </div> 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">Valider</button>
                 </div>

@@ -51,7 +51,7 @@ description : page principale d'administration
     <div class="d-none d-md-block"> 
         <table class="table table-hover"> 
             <thead>
-                <tr>
+                <tr class="border-bottom border-1 border-dark">
                     <th>ID</th>
                     <th>Prénom</th>
                     <th>Nom</th>
@@ -81,6 +81,18 @@ description : page principale d'administration
                 }?> 
 
             </tbody> 
+            <tfoot >
+                <tr class="border-top border-2 border-dark">
+                    <th>Total</th>
+                    <td></td>
+                    <td></td>
+                    <th class="text-end"><?=$total[0]['ordTotal']?> CHF</th>
+                    <th class="text-end"><?=$total[0]['ordTotalPaid']?> CHF</th>
+                    <td></td>
+                    <td></td>
+                </tr>
+                
+            </tfoot>
         </table>
     </div>
     
@@ -113,6 +125,15 @@ description : page principale d'administration
                 <?php } //fin foreach
                 ?>
             </tbody>
+            <tfoot >
+                <tr class="border-top border-2 border-dark">
+                    <th>Total</th>
+                    <th class="text-center"><?=!empty($total[0]['ordTotal']) ? $total[0]['ordTotal'] : "0"?> CHF</th>
+                    <th class="text-center"><?=!empty($total[0]['ordTotalPaid']) ? $total[0]['ordTotalPaid'] : "0"?> CHF</th>
+                    
+                </tr>
+                
+            </tfoot>
         </table>
     </div>
     <?php

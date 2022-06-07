@@ -12,7 +12,7 @@
                             <label class="form-label" for="username">Nom d'utilisateur</label>
                         </div>
                         <div class="col">
-                            <input class="form-control" type="text" name="username" value="<?=isset($username) && $username ? $username : ''?>">
+                            <input class="form-control" type="text" name="username" id="username" value="<?=isset($username) && $username ? $username : ''?>">
                         </div>
                     </div>
 
@@ -21,7 +21,7 @@
                             <label class="form-label" for="password">Mot de passe</label>
                         </div>
                         <div class="col">
-                            <input class="form-control <?=isset($connectError) && $connectError ? "is-invalid" : ''?>" type="password" name="password">
+                            <input class="form-control <?=isset($connectError) && $connectError ? "is-invalid" : ''?>" id="password" type="password" name="password">
                             <div class="invalid-feedback"> Nom d'utilisateur ou mot de passe erroné</div>
                         </div>
                     </div>
